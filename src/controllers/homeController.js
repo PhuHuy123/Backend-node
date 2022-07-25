@@ -46,6 +46,15 @@ let putCRUD = async(req, res)=> {
          dataTable: allUsers
     });
 }
+let deleteCRUD = async(req,res)=> {
+    if(req.query.id){
+        await CRUDService.deleteUserById(req.query.id);
+        return res.send("Delete Thanh cong!")
+    }
+    else {
+        return res.send("It's not user ID!")
+    }
+}
 module.exports ={
     getHomePage:getHomePage,
     getCRUD:getCRUD,
@@ -53,5 +62,6 @@ module.exports ={
     displayGetCRUD:displayGetCRUD,
     getEditCRUD:getEditCRUD,
     putCRUD:putCRUD,
+    deleteCRUD:deleteCRUD
 }
 // req.body "du lieu trong trang truyen ve khi click submit"
