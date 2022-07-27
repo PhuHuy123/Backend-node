@@ -6,14 +6,14 @@ let handleLogin= async(req, res)=> {
     let password = req.body.password;
     if(!email || !password){
         return res.status(500).json({
-            errCode: 1, 
+            errCode: 10, 
             message: "Khong hop le!"
         })
     }
     let userData = await userService.handleUserLogin(email, password)
     return res.status(200).json({
         errCode: userData.errCode,
-        message: userData.message,
+        message: userData.errMessage,
         user: userData.user?userData.user:{},
     })
 }
