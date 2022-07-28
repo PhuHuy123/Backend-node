@@ -86,7 +86,138 @@ let getAllUsers = (userId) => {
         }
      })
 }
+let hashUserPassword = (password)=>{
+    return new Promise(async (resolve, reject) =>{
+        try {
+            let hashPassword = await bcrypt.hashSync(password, salt);
+            resolve(hashPassword);
+        } catch (e) {
+            reject(e)
+        }
+    })
+}
+let getNewUsers = (data) => {
+    return new Promise(async(resolve, reject) =>{
+        try {
+            let check = await checkEmail(data.email)
+            if(check){
+                resolve({
+                    errCode: 1,
+                    message: 'Email da ton tai !'
+                })
+            }
+
+            let hashPasswordFromBcrypt = await hashUserPassword(data.password);
+            await db.User.create({
+                email: data.email,
+                password: hashPasswordFromBcrypt,
+                firstName: data.firstName,
+                lastName: data.lastName,
+                address: data.address,
+                phoneNumber: data.phoneNumber,
+                gender: data.gender === '1' ? true:false,
+                roleId: data.roleId,
+            })
+            resolve({
+                errCode:0,
+                message:'OK! Create new user successfully'
+            })
+        } catch (e) {
+            reject(e)
+        }
+    })
+}
+
+let getUserInfoById = (userId)=>{
+    return new Promise(async (resolve, reject) =>{
+         try {
+            let user = await db.User.findOne({
+                where: {id: userId},
+                attributes:{
+                    exclude: ['password']
+                }
+            });
+            if(user){
+                resolve({
+                    errCode: 0,
+                    message: 'Ok show user',
+                    user
+                }) 
+            }
+            else resolve({
+                errCode: 2,
+                message: 'Khong tim thay user',
+                user
+            }) 
+        } catch (e) {
+            reject(e)
+        }
+     })
+}
+
+let updateUser=(data)=> {
+    return new Promise(async (resolve, reject) =>{
+         try {
+            let user = await db.User.findOne({
+                where: {id: data.id},
+                raw:false
+            });
+            if(user){
+                user.firstName = data.firstName,
+                user.lastName = data.lastName,
+                user.address = data.address,
+                user.phoneNumber = data.phoneNumber,
+                
+                await user.save();
+                // let allUsers = await db.User.findAll();
+                resolve({
+                    errCode:0,
+                    message: "Update user pass"
+                });
+            }
+            else{
+                resolve({
+                    errCode:2,
+                    message: "Khong tim thay user"
+                });
+            }
+        } catch (e) {
+            reject(e);
+        }
+     })
+
+}
+
+let deleteUsers = (userId)=>{
+    return new Promise(async (resolve, reject) =>{
+         try {
+            let user = await db.User.findOne({
+                where: {id: userId}
+            });
+            if(!user){ 
+                resolve({
+                    errCode: 2,
+                    message: 'User khong ton tai'
+                });               
+            }
+            await db.User.destroy({
+                where: {id: userId}
+            });
+            resolve({
+                errCode: 0,
+                message: 'OK Delete user'
+            });
+        } catch (e) {
+            reject(e);
+        }
+     })
+}
+
 module.exports = {
     handleUserLogin: handleUserLogin,
     getAllUsers:getAllUsers,
+    getNewUsers:getNewUsers,
+    getUserInfoById:getUserInfoById,
+    updateUser:updateUser,
+    deleteUsers:deleteUsers,
 }
