@@ -29,7 +29,6 @@ let handleGetAllUsers = async(req, res)=>{
     }
     
     let users = await userService.getAllUsers(id)
-    console.log(users)
     return res.status(200).json({
         errCode: 0, 
         message: "OK",
@@ -79,6 +78,20 @@ let handleDeleteNewUser= async (req, res)=>{
     let message = await userService.deleteUsers(req.body.id)
     return res.status(200).json(message)
 }
+let getAllCode = async (req, res)=>{
+    try {
+        let data = await userService.getAllCodeService(req.query.type)
+        return res.status(200).json(data)
+    } catch (e) {
+        console.log( "Get all code error: ",e)
+        return res.status(200).json({
+            errCode: -1,
+            message: "Error from server",
+        })
+        
+    }
+    
+}
 module.exports ={
     handleLogin:handleLogin,
     handleGetAllUsers:handleGetAllUsers,
@@ -86,5 +99,7 @@ module.exports ={
     handleEditUser: handleEditUser,
     handleUpdateUser: handleUpdateUser,
     handleDeleteNewUser: handleDeleteNewUser,
+    getAllCode: getAllCode,
+    
 }
 

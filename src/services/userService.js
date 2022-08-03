@@ -214,7 +214,29 @@ let deleteUsers = (userId)=>{
         }
      })
 }
-
+let getAllCodeService = (dataType)=>{
+    return new Promise(async (resolve, reject) =>{
+         try {
+            if(!dataType){
+                resolve({
+                    errCode: 1,
+                    message: 'Chua nhap du lieu!'
+                }); 
+            }
+            else{
+                let res={};
+                let allCode = await db.Allcode.findAll({
+                    where: {type: dataType}
+                });
+                res.errCode = 0;
+                res.data = allCode;
+                resolve(res);
+            }
+        } catch (e) {
+            reject(e);
+        }
+     })
+}
 module.exports = {
     handleUserLogin: handleUserLogin,
     getAllUsers:getAllUsers,
@@ -222,4 +244,5 @@ module.exports = {
     getUserInfoById:getUserInfoById,
     updateUser:updateUser,
     deleteUsers:deleteUsers,
+    getAllCodeService:getAllCodeService,
 }
