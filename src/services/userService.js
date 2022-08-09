@@ -161,6 +161,12 @@ let getUserInfoById = (userId)=>{
 let updateUser=(data)=> {
     return new Promise(async (resolve, reject) =>{
          try {
+             if(!data.id || !data.roleId || !data.gender || !data.positionID){
+                 resolve({
+                     errCode:2,
+                     message: "Khong tim thay user"
+                 });
+             }
             let user = await db.User.findOne({
                 where: {id: data.id},
                 raw:false
@@ -170,18 +176,15 @@ let updateUser=(data)=> {
                 user.lastName = data.lastName,
                 user.address = data.address,
                 user.phoneNumber = data.phoneNumber,
+                user.gender = data.gender,
+                user.roleId = data.roleId,
+                user.positionID = data.positionID,
                 
                 await user.save();
                 // let allUsers = await db.User.findAll();
                 resolve({
                     errCode:0,
                     message: "Update user pass"
-                });
-            }
-            else{
-                resolve({
-                    errCode:2,
-                    message: "Khong tim thay user"
                 });
             }
         } catch (e) {
