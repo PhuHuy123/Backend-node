@@ -119,6 +119,7 @@ let getNewUsers = (data) => {
                     gender: data.gender,
                     roleId: data.roleId,
                     positionID: data.positionID,
+                    image: data.image
                 })
                 resolve({
                     errCode:0,
@@ -178,7 +179,10 @@ let updateUser=(data)=> {
                 user.phoneNumber = data.phoneNumber,
                 user.gender = data.gender,
                 user.roleId = data.roleId,
-                user.positionID = data.positionID,
+                user.positionID = data.positionID;
+                if(data.image){
+                    user.image = data.image
+                }
                 
                 await user.save();
                 // let allUsers = await db.User.findAll();
