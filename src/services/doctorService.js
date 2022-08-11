@@ -29,6 +29,52 @@ let getTopDoctorHomeService = (limitInput) => {
      })
 }
 
+let getAllDoctorsService = () => {
+    return new Promise(async (resolve, reject) =>{
+         try {
+            let doctor = await db.User.findAll({
+                attributes:{
+                    exclude: ['password','image']
+                },
+                where: {roleId: 'R2'},
+            })
+            resolve({
+                errCode: 0,
+                data: doctor
+            });
+        } catch (e) {
+            reject(e);
+        }
+     })
+}
+let createInfoDoctor = (data) => {
+    return new Promise(async(resolve, reject) =>{
+        try {
+            if(!data.doctorId || !data.contentHTML || !data.contentMarkdown ){
+                resolve({
+                    errCode: 1,
+                    message: 'Missing parameters !'
+                })
+            }
+            else{
+                await db.Markdown.create({
+                    contentHTML: data.contentHTML,
+                    contentMarkdown: data.contentMarkdown,
+                    description: data.description,
+                    doctorId : data.doctorId,
+                })
+                resolve({
+                    errCode:0,
+                    message:'OK! Create info'
+                })
+            }
+        } catch (e) {
+            reject(e)
+        }
+    })
+}
 module.exports = {
     getTopDoctorHomeService:getTopDoctorHomeService,
+    getAllDoctorsService:getAllDoctorsService,
+    createInfoDoctor:createInfoDoctor,
 }
