@@ -73,8 +73,43 @@ let createInfoDoctor = (data) => {
         }
     })
 }
+let getDetailDoctorById = (idInput) => {
+    return new Promise(async (resolve, reject) =>{
+         try {
+             if(!idInput){
+                 resolve({
+                    errCode: 1,
+                    message: 'Missing getDetailDoctorById parameters !'
+                })
+             }
+            else{
+                let data = await db.User.findOne({
+                    where: {
+                        id: idInput
+                    },
+                    attributes:{
+                        exclude: ['password','image']
+                    },
+                    include: [
+                        {model: db.Markdown, attributes:['description', 'contentHTML', 'contentMarkdown']},
+                        {model: db.Allcode, as: 'positionData', attributes:['valueEn', 'valueVi']},
+                    ],
+                    raw: true,
+                    nest: true,
+                })
+                resolve({
+                    errCode:0,
+                    data: data
+                })
+            }
+        } catch (e) {
+            reject(e);
+        }
+     })
+}
 module.exports = {
     getTopDoctorHomeService:getTopDoctorHomeService,
     getAllDoctorsService:getAllDoctorsService,
     createInfoDoctor:createInfoDoctor,
+    getDetailDoctorById:getDetailDoctorById
 }
