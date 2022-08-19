@@ -1,6 +1,9 @@
 import db from '../models/index'
 import bcrypt from 'bcryptjs';
 const salt = bcrypt.genSaltSync(10);
+require('dotenv').config();
+import _ from 'lodash';
+const MAX_NUMBER_SCHEDULE = process.env.MAX_NUMBER_SCHEDULE;
 
 let getTopDoctorHomeService = (limitInput) => {
     return new Promise(async (resolve, reject) =>{
@@ -127,9 +130,59 @@ let getDetailDoctorById = (idInput) => {
         }
      })
 }
+let bulkCreateSchedule = (data) => {
+    return new Promise(async(resolve, reject) =>{
+        try {
+            if(!data.doctorId || !data.arrSchedule || !data.formatData){
+                resolve({
+                    errCode: 1,
+                    message: 'Missing parameters !'
+                })
+            }else{
+                let schedule = data.arrSchedule;
+                if(schedule && schedule.length > 0){
+                    schedule = schedule.map(item => {
+                        item.maxNumber= MAX_NUMBER_SCHEDULE;
+                        return item;
+                    })
+                }
+                // get all existing data
+                let existing = await db.Schedule.findAll({
+                    where:{doctorId: data.doctorId, date: data.formatData},
+                    attributes:['timeType', 'date','doctorId','maxNumber'],
+                    raw:true
+                })
+                // convert to date
+                if(existing && existing.length>0){
+                    existing = existing.map(item => {
+                        item.date = new Date(item.date).getTime();
+                        return item;
+                    })
+                }
+
+                // compare different 
+                let toCreate = _.differenceWith(schedule, existing, (a,b)=>{
+                    return a.timeType === b.timeType && a.date === b.date;
+                })
+
+                //create a new data 
+                if(toCreate && toCreate.length > 0) {
+                    await db.Schedule.bulkCreate(toCreate)
+                }
+                resolve({
+                    errCode:0,
+                    message:'OK! Create info'
+                })
+            }
+        } catch (e) {
+            reject(e)
+        }
+    })
+}
 module.exports = {
     getTopDoctorHomeService:getTopDoctorHomeService,
     getAllDoctorsService:getAllDoctorsService,
     createInfoDoctor:createInfoDoctor,
-    getDetailDoctorById:getDetailDoctorById
+    getDetailDoctorById:getDetailDoctorById,
+    bulkCreateSchedule:bulkCreateSchedule,
 }
