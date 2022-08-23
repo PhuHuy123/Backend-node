@@ -143,6 +143,15 @@ let getDetailDoctorById = (idInput) => {
                     include: [
                         {model: db.Markdown, attributes:['description', 'contentHTML', 'contentMarkdown']},
                         {model: db.Allcode, as: 'positionData', attributes:['valueEn', 'valueVi']},
+                        {
+                            model: db.DoctorInfo,
+                            attributes:{exclude: ['id', 'doctorId']},
+                            include: [
+                                {model: db.Allcode, as: 'priceIdData', attributes:['valueEn', 'valueVi']},
+                                {model: db.Allcode, as: 'provinceIdData', attributes:['valueEn', 'valueVi']},
+                                {model: db.Allcode, as: 'paymentIdData', attributes:['valueEn', 'valueVi']},
+                            ]
+                        },
                     ],
                     raw: false,
                     nest: true,
