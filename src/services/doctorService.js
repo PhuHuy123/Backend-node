@@ -147,9 +147,9 @@ let getDetailDoctorById = (idInput) => {
                             model: db.DoctorInfo,
                             attributes:{exclude: ['id', 'doctorId']},
                             include: [
-                                {model: db.Allcode, as: 'priceIdData', attributes:['valueEn', 'valueVi']},
-                                {model: db.Allcode, as: 'provinceIdData', attributes:['valueEn', 'valueVi']},
-                                {model: db.Allcode, as: 'paymentIdData', attributes:['valueEn', 'valueVi']},
+                                {model: db.Allcode, as: 'priceTypeData', attributes:['valueEn', 'valueVi']},
+                                {model: db.Allcode, as: 'provinceTypeData', attributes:['valueEn', 'valueVi']},
+                                {model: db.Allcode, as: 'paymentTypeData', attributes:['valueEn', 'valueVi']},
                             ]
                         },
                     ],
@@ -253,6 +253,44 @@ let getScheduleDoctorByDate = (doctorId, date) => {
         }
      })
 }
+let getExtraInfoDoctorById= (doctorId) => {
+    return new Promise(async (resolve, reject) =>{
+         try {
+             if(!doctorId ) {
+                 resolve({
+                    errCode: 1,
+                    message: 'Missing getExtraInfoDoctorById parameters !'
+                })
+             }
+            else{
+                let dataInfo = await db.DoctorInfo.findOne({
+                    where: {
+                        doctorId: doctorId,
+                    },
+                    attributes:{
+                        exclude: ['id', 'doctorId']
+                    },
+                    include: [
+                        {model: db.Allcode, as: 'priceTypeData', attributes:['valueEn', 'valueVi']},
+                        {model: db.Allcode, as: 'provinceTypeData', attributes:['valueEn', 'valueVi']},
+                        {model: db.Allcode, as: 'paymentTypeData', attributes:['valueEn', 'valueVi']},
+                    ],
+                    raw: false,
+                    nest: true, 
+                })
+                if(!dataInfo){
+                    dataInfo =[]
+                }
+                resolve({
+                    errCode:0,
+                    data: dataInfo
+                })
+            }
+        } catch (e) {
+            reject(e);
+        }
+     })
+}
 module.exports = {
     getTopDoctorHomeService:getTopDoctorHomeService,
     getAllDoctorsService:getAllDoctorsService,
@@ -260,4 +298,5 @@ module.exports = {
     getDetailDoctorById:getDetailDoctorById,
     bulkCreateSchedule:bulkCreateSchedule,
     getScheduleDoctorByDate:getScheduleDoctorByDate,
+    getExtraInfoDoctorById:getExtraInfoDoctorById,
 }
