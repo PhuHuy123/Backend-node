@@ -2,6 +2,7 @@ import db from '../models/index'
 import bcrypt from 'bcryptjs';
 require('dotenv').config();
 import _ from 'lodash';
+import emailService from './emailService'
 
 let postBookAppointment = (data) => {
     return new Promise(async(resolve, reject) =>{
@@ -13,6 +14,14 @@ let postBookAppointment = (data) => {
                 })
             }
             else{
+                await emailService.sendSimpleEmail({
+                    receiverEmail: data.email,
+                    patientName: 'Nguyễn Phú Huy',
+                    time: '8:00 - 9:00 ',
+                    doctorName: "abc",
+                    redirectLink: 'http://localhost:3000/home'
+                })
+
                 let user = await db.User.findOrCreate({
                     where: {email: data.email},
                     defaults: {
