@@ -50,16 +50,31 @@ let getAllDoctorsService = () => {
         }
      })
 }
+let checkRequiredFields = (inputData) => {
+    let arrFields = ["doctorId", "contentHTML", "contentMarkdown", "action", "selectedPrice",
+                    "selectedPayment", "selectedProvince", "nameClinic", "addressClinic", "note"
+                ]
+    let isValid = true;
+    let element = '';
+    for (let i = 0; i < arrFields.length; i++){
+        if(!inputData[arrFields[i]]){
+            isValid = false;
+            element = arrFields[i];
+            break;
+        }
+    }
+    return {
+        isValid, element
+    }
+}
 let createInfoDoctor = (data) => {
     return new Promise(async(resolve, reject) =>{
         try {
-            if(!data.doctorId || !data.contentHTML || !data.contentMarkdown || !data.action
-                || !data.selectedPrice || !data.selectedPayment || !data.selectedProvince
-                || !data.nameClinic || !data.addressClinic || !data.note
-            ){
+            let checkObj = checkRequiredFields(data)
+            if(checkObj.isValid === false) {
                 resolve({
                     errCode: 1,
-                    message: 'Missing parameters !'
+                    message: `Missing parameters: ${checkObj.element}!`
                 })
             }
             else{
@@ -99,6 +114,8 @@ let createInfoDoctor = (data) => {
                     doctorInfo.addressClinic= data.addressClinic;
                     doctorInfo.nameClinic= data.nameClinic;
                     doctorInfo.note= data.note;
+                    doctorInfo.specialtyId= data.specialtyId;
+                    doctorInfo.clinicId= data.clinicId;
                     await doctorInfo.save();
                 }
                 else{
@@ -111,6 +128,8 @@ let createInfoDoctor = (data) => {
                         addressClinic: data.addressClinic,
                         nameClinic: data.nameClinic,
                         note: data.note,
+                        specialtyId: data.specialtyId,
+                        clinicId: data.clinicId,
                     })
                 }
                 resolve({
