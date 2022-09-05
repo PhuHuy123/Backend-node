@@ -13,7 +13,7 @@ let buildUrlEmail = (doctorId, token)=>{
 let postBookAppointment = (data) => {
     return new Promise(async(resolve, reject) =>{
         try {
-            if(!data.doctorId || !data.email || !data.timeType || !data.date || !data.fullName
+            if(!data.doctorId || !data.email || !data.phoneNumber || !data.timeType || !data.date || !data.fullName
                 || !data.selectedGender || !data.address
                 ){
                 resolve({
@@ -29,6 +29,7 @@ let postBookAppointment = (data) => {
                     time: data.timeString,
                     doctorName: data.doctorName,
                     language: data.language,
+                    phoneNumber: data.phoneNumber,
                     redirectLink: buildUrlEmail(data.doctorId, token)
                 })
 
@@ -39,7 +40,8 @@ let postBookAppointment = (data) => {
                         roleId: 'R3',
                         gender: data.selectedGender,
                         address: data.address,
-                        firstName: data.fullName
+                        firstName: data.fullName,
+                        phoneNumber: data.phoneNumber,
                     }
                 });
                 if(user && user[0]){
