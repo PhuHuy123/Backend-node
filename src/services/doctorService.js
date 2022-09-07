@@ -3,6 +3,7 @@ import bcrypt from 'bcryptjs';
 const salt = bcrypt.genSaltSync(10);
 require('dotenv').config();
 import _ from 'lodash';
+import emailService from './emailService'
 const MAX_NUMBER_SCHEDULE = process.env.MAX_NUMBER_SCHEDULE;
 
 let getTopDoctorHomeService = (limitInput) => {
@@ -400,6 +401,41 @@ let getListPatientForDoctor = (doctorId, date) => {
         }
      })
 }
+let sendRemedy = (data) => {
+    return new Promise(async (resolve, reject) =>{
+         try {
+             if(!data.doctorId || !data.email || !data.patientId || !data.timeType || !data.imgBase64) {
+                 resolve({
+                    errCode: 1,
+                    message: 'Missing sendRemedy parameters !'
+                })
+             }
+            else{
+                let appointment = await db.Booking.findOne({
+                    where:{
+                        doctorId: data.doctorId,
+                        patientId: data.patientId,
+                        statusId : 'S2',
+                        timeType: data.timeType
+                    },
+                    raw: false
+                })
+                if(appointment){
+                    appointment.statusId = 'S3';
+                    await appointment.save();
+                }
+                // send email
+                await emailService.sendAppointment(data);
+                resolve({
+                    errCode:0,
+                    message: 'ok'
+                })
+            }
+        } catch (e) {
+            reject(e);
+        }
+     })
+}
 module.exports = {
     getTopDoctorHomeService:getTopDoctorHomeService,
     getAllDoctorsService:getAllDoctorsService,
@@ -409,5 +445,6 @@ module.exports = {
     getScheduleDoctorByDate:getScheduleDoctorByDate,
     getExtraInfoDoctorById:getExtraInfoDoctorById,
     getProfileDoctorById:getProfileDoctorById,
-    getListPatientForDoctor:getListPatientForDoctor
+    getListPatientForDoctor:getListPatientForDoctor,
+    sendRemedy:sendRemedy
 }

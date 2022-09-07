@@ -59,6 +59,56 @@ let getBodyHTMLEmail = (dataSend) =>{
     }
     return res
 }
+let sendAppointment = async(dataSend)=>{
+
+    // create reusable transporter object using the default SMTP transport
+    let transporter = nodemailer.createTransport({
+        host: "smtp.gmail.com",
+        port: 587,
+        secure: false, // true for 465, false for other ports
+        auth: {
+        user: process.env.EMAIL_APP, // generated ethereal user
+        pass: process.env.EMAIL_APP_PASSWORD, // generated ethereal password
+        },
+    });
+
+    // send mail with defined transport object
+    let info = await transporter.sendMail({
+        from: '"Khóa Luận Tốt nghiệp 👻" <zombiipark@gmail.com>', // sender address
+        to: dataSend.email, // list of receivers
+        subject: "Kết quả đặt lịch khắm bệnh ✔", // Subject line
+        // text: "Hello world?", 
+        html: getBodyHTMLEmailRemery(dataSend), // html body
+        attachments: [
+            {
+                filename: `remedy-${dataSend.patientId}-${new Date().getTime()}.png`,
+                content: dataSend.imgBase64.split("base64,")[1],
+                encoding: 'base64',
+            },
+        ]
+    });
+}
+let getBodyHTMLEmailRemery = (dataSend) =>{
+    let res = ''
+    if(dataSend.language === 'vi'){ 
+        res =`
+                <h3>Xin chào ${dataSend.patientName}!</h3>
+                <p>Bạn nhận được email này vì đã đặt lịch khắm bệnh trên hệ thống book khám bệnh</p>
+                <p>Thông tin đơn thuốc và hóa đơn sẽ được gửi trong file đính kèm.</p>
+                <div>Xin chân thành cảm ơn</div>
+            `
+    }
+    if(dataSend.language === 'en'){ 
+        res =`
+                <h3>Hello ${dataSend.patientName}!</h3>
+                <p>You received this email because you booked an appointment on the medical booking system</p>
+                <p>Prescription and invoice information will be sent in the attachment.</p>
+                <div>Thanks you!</div>
+            `
+    }
+    return res
+}
 module.exports = {
     sendSimpleEmail: sendSimpleEmail,
+    sendAppointment:sendAppointment
 }
