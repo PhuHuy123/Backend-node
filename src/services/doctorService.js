@@ -177,7 +177,7 @@ let getDetailDoctorById = (idInput) => {
                     nest: true,
                 })
                 if(data && data.image){
-                    data.image = new Buffer(data.image, 'base64').toString('binary');
+                    data.image = Buffer.from(data.image, 'base64').toString('binary');
                 }
                 if(!data) data ={};
                 resolve({
@@ -346,7 +346,7 @@ let getProfileDoctorById = (doctorId) => {
                     nest: true,
                 })
                 if(data && data.image){
-                    data.image = new Buffer(data.image, 'base64').toString('binary');
+                    data.image = Buffer.from(data.image, 'base64').toString('binary');
                 }
                 resolve({
                     errCode:0,
