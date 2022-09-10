@@ -1,6 +1,13 @@
 import db from '../models/index'
 import bcrypt from 'bcryptjs';
 const salt = bcrypt.genSaltSync(10);
+import emailService from './emailService'
+import { v4 as uuidv4 } from 'uuid'
+
+let buildUrlEmail = (doctorId, token)=>{
+    let res = `${process.env.URL_REACT}/updatePassword?token=${token}&id=${doctorId}`
+    return res
+}
 
 let handleUserLogin= (email, password) => {
     return new Promise(async (resolve, reject) =>{
@@ -38,6 +45,80 @@ let handleUserLogin= (email, password) => {
                 userData.errMessage ="Email khong ton tai"
             }
             resolve(userData);
+        } catch (e) {
+            reject(e);
+        }
+     })
+}
+let handleUpdatePassword=(data)=> {
+    return new Promise(async (resolve, reject) =>{
+         try {
+             if(!data.id || !data.token || !data.password) {
+                resolve({
+                     errCode:2,
+                     message: "Khong tim thay user"
+                 });
+             }
+            else{
+                let user = await db.User.findOne({
+                    where: {
+                        id: data.id,
+                        token: data.token
+                    },
+                    raw:false
+                });
+                if(user){
+                    let hashPasswordFromBcrypt = await hashUserPassword(data.password);
+                    user.token = '',
+                    user.password = hashPasswordFromBcrypt,
+                    
+                    await user.save();
+                    resolve({
+                        errCode:0,
+                        message: "Update password successfully"
+                    });
+                }
+                else{
+                    resolve({
+                        errCode:1,
+                        message: "Error"
+                    });
+                }
+            }
+        } catch (e) {
+            reject(e);
+        }
+     })
+
+}
+let handleCheckEmail = (userEmail) => {
+    return new Promise(async (resolve, reject) =>{
+         try {
+            let user = await db.User.findOne({
+                where: {email: userEmail},
+                raw: false
+            });
+            if(user){
+                let token = uuidv4();
+                await emailService.updatePasswordEmail({
+                    receiverEmail: userEmail,
+                    // language: data.language,
+                    redirectLink: buildUrlEmail(user.id, token)
+                })
+                user.token = token,               
+                await user.save();              
+                resolve({
+                    errCode:0,
+                    message: "Ok"
+                });
+            }
+            else{
+                resolve({
+                    errCode:1,
+                    message: "Email không tồn tại"
+                });
+            }
+            resolve();
         } catch (e) {
             reject(e);
         }
@@ -119,7 +200,8 @@ let getNewUsers = (data) => {
                     gender: data.gender,
                     roleId: data.roleId,
                     positionID: data.positionID,
-                    image: data.image
+                    image: data.image,
+                    // token: ''
                 })
                 resolve({
                     errCode:0,
@@ -247,10 +329,12 @@ let getAllCodeService = (dataType)=>{
 }
 module.exports = {
     handleUserLogin: handleUserLogin,
+    handleUpdatePassword:handleUpdatePassword,
     getAllUsers:getAllUsers,
     getNewUsers:getNewUsers,
     getUserInfoById:getUserInfoById,
     updateUser:updateUser,
     deleteUsers:deleteUsers,
     getAllCodeService:getAllCodeService,
+    handleCheckEmail:handleCheckEmail,
 }

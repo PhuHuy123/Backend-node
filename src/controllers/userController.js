@@ -17,7 +17,27 @@ let handleLogin= async(req, res)=> {
         user: userData.user?userData.user:{},
     })
 }
-
+let handleUpdatePassword = async(req, res)=> {
+    if(!req.body.id){
+        return res.status(200).json({
+            errCode: 1, 
+            message: "Chua nhan duoc ID",
+        })
+    }
+    let data = await userService.handleUpdatePassword(req.body);
+    return res.status(200).json(data)
+}
+let handleCheckEmail = async(req, res)=> {
+    let email = req.body.email;
+    if(!email){
+        return res.status(500).json({
+            errCode: 10, 
+            message: "Khong hop le!"
+        })
+    }
+    let userData = await userService.handleCheckEmail(email)
+    return res.status(200).json({userData})
+}
 let handleGetAllUsers = async(req, res)=>{
     let id = req.query.id;
     if(!id){
@@ -94,6 +114,8 @@ let getAllCode = async (req, res)=>{
 }
 module.exports ={
     handleLogin:handleLogin,
+    handleUpdatePassword:handleUpdatePassword,
+    handleCheckEmail: handleCheckEmail,
     handleGetAllUsers:handleGetAllUsers,
     handleCreateNewUser: handleCreateNewUser,
     handleEditUser: handleEditUser,
