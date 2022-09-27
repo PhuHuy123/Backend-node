@@ -10,6 +10,7 @@ import clinicController from "../controllers/clinicController";
 let router = express.Router();
 
 let initWebRoutes = (app)=>{
+    // app.METHOD(PATCH, HANDLER)
     router.get('/',homeController.getHomePage);
     router.get('/crud',homeController.getCRUD);
     router.post('/post-crud',homeController.postCRUD);
@@ -44,6 +45,7 @@ let initWebRoutes = (app)=>{
 
     router.post('/api/patient-book-appointment',patientController.postBookAppointment);
     router.post('/api/verify-book-appointment',patientController.postVerifyBookAppointment);
+    router.post('/api/verify-paypal',patientController.postVerifyPaypal);
 
     router.post('/api/create-new-specialty',specialtyController.createNewSpecialty);
     router.get('/api/get-specialty',specialtyController.getAllSpecialty);

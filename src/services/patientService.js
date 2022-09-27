@@ -13,7 +13,7 @@ let buildUrlEmail = (doctorId, token)=>{
 let postBookAppointment = (data) => {
     return new Promise(async(resolve, reject) =>{
         try {
-            if(!data.doctorId || !data.email || !data.phoneNumber || !data.timeType || !data.date || !data.fullName
+            if(!data.doctorId || !data.email || !data.phoneNumber || !data.timeType || !data.date || !data.firstName || !data.lastName
                 || !data.selectedGender || !data.address
                 ){
                 resolve({
@@ -25,7 +25,7 @@ let postBookAppointment = (data) => {
                 let token = uuidv4();
                 await emailService.sendSimpleEmail({
                     receiverEmail: data.email,
-                    patientName: data.fullName,
+                    patientName: data.firstName,
                     time: data.timeString,
                     doctorName: data.doctorName,
                     language: data.language,
@@ -40,7 +40,7 @@ let postBookAppointment = (data) => {
                         roleId: 'R3',
                         gender: data.selectedGender,
                         address: data.address,
-                        firstName: data.fullName,
+                        firstName: data.firstName,
                         phoneNumber: data.phoneNumber,
                     }
                 });
@@ -109,7 +109,50 @@ let postVerifyBookAppointment = (data) => {
         }
     })
 }
+let postVerifyPaypal = (data) => {
+    return new Promise(async(resolve, reject) =>{
+        try {
+            if(!data.doctorId || !data.email || !data.phoneNumber || !data.timeType || !data.date || !data.firstName || !data.lastName
+                || !data.selectedGender || !data.address
+                ){
+                resolve({
+                    errCode: 1,
+                    message: 'Missing parameters !'
+                })
+            }
+            else{
+
+                let user = await db.User.findOne({
+                    where: {email: data.email},
+
+                });
+                if(user){
+                    await db.Booking.findOrCreate({
+                        where: {
+                            patientId: user.id,
+                            timeType:  data.timeType,
+                        },
+                        defaults: {
+                            statusId: 'S2',
+                            doctorId: data.doctorId,
+                            patientId: user.id,
+                            date: data.date,
+                            timeType:  data.timeType,
+                        }
+                    });
+                }
+                resolve({
+                    errCode:0,
+                    message:'OK! Save info patient successfully'
+                })
+            }
+        } catch (e) {
+            reject(e)
+        }
+    })
+}
 module.exports = {
     postBookAppointment: postBookAppointment,
     postVerifyBookAppointment:postVerifyBookAppointment,
+    postVerifyPaypal:postVerifyPaypal,
 }
