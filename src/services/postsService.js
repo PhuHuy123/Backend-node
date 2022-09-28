@@ -3,26 +3,26 @@ import bcrypt from 'bcryptjs';
 require('dotenv').config();
 import _ from 'lodash';
 
-let createNewClinic = (data) => {
+let createNewPosts = (data) => {
     return new Promise(async(resolve, reject) =>{
         try {
-            if(!data.name || !data.address || !data.imageBase64 || !data.contentMarkdown || !data.contentHTML){
+            if(!data.name || !data.description || !data.imageBase64 || !data.contentMarkdown || !data.contentHTML){
                 resolve({
                     errCode: 1,
                     message: 'Missing parameters !'
                 })
             }
             else{
-                await db.Clinic.create({
+                await db.Posts.create({
                     descriptionHTML: data.contentHTML,
                     descriptionMarkdown: data.contentMarkdown,
                     image: data.imageBase64,
                     name : data.name,
-                    address: data.address
+                    description: data.description
                 })
                 resolve({
                     errCode:0,
-                    message:'OK! Create new Clinic'
+                    message:'OK! Create new Posts'
                 })     
             }
         } catch (e) {
@@ -31,10 +31,10 @@ let createNewClinic = (data) => {
     })
 }
 
-let getAllClinic = () => {
+let getAllPosts = () => {
     return new Promise(async(resolve, reject) =>{
         try {
-            let data = await db.Clinic.findAll();
+            let data = await db.Posts.findAll();
             if(data && data.length > 0) {
                 data.map(item =>{
                     item.image = Buffer.from(item.image, 'base64').toString('binary');
@@ -51,7 +51,7 @@ let getAllClinic = () => {
         }
     })
 }
-let getDetailClinicById = (inputId) => {
+let getDetailPostsById = (inputId) => {
     return new Promise(async(resolve, reject) =>{
         try {
             if(!inputId) {
@@ -61,22 +61,16 @@ let getDetailClinicById = (inputId) => {
                 })
             }
             else{
-                let data = await db.Clinic.findOne({
+                let data = await db.Posts.findOne({
                     where: {
                         id: inputId
                     },
-                    attributes:['name', 'address', 'descriptionHTML','descriptionMarkdown']
+                    // attributes:['descriptionHTML','descriptionMarkdown']
                 })
-                if(data){
-                    let doctorClinic = [];
-                    doctorClinic = await db.DoctorInfo.findAll({
-                        where: {clinicId: inputId},
-                        attributes:['doctorId','provinceId']
-                    })
-                    data.doctorClinic = doctorClinic;
+                if(data && data.image){
+                    data.image = Buffer.from(data.image, 'base64').toString('binary');
                 }
-                else data = {}
-
+                if(!data) data ={}
                 resolve({
                     errCode:0,
                     message:'OK!',
@@ -89,7 +83,7 @@ let getDetailClinicById = (inputId) => {
     })
 }
 module.exports = {
-    createNewClinic:createNewClinic,
-    getAllClinic:getAllClinic,
-    getDetailClinicById:getDetailClinicById
+    createNewPosts:createNewPosts,
+    getAllPosts:getAllPosts,
+    getDetailPostsById:getDetailPostsById
 }
