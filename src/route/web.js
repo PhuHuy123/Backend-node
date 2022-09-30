@@ -5,6 +5,7 @@ import doctorController from "../controllers/doctorController";
 import patientController from "../controllers/patientController";
 import specialtyController from "../controllers/specialtyController";
 import clinicController from "../controllers/clinicController";
+import bookingController from "../controllers/bookingController";
 import postsController from "../controllers/postsController";
 
 
@@ -43,7 +44,6 @@ let initWebRoutes = (app)=>{
     router.get('/api/get-list-patient-for-doctor',doctorController.getListPatientForDoctor);
     router.post('/api/send-remedy', doctorController.sendRemedy);
 
-
     router.post('/api/patient-book-appointment',patientController.postBookAppointment);
     router.post('/api/verify-book-appointment',patientController.postVerifyBookAppointment);
     router.post('/api/verify-paypal',patientController.postVerifyPaypal);
@@ -55,6 +55,8 @@ let initWebRoutes = (app)=>{
     router.post('/api/create-new-clinic',clinicController.createNewClinic);
     router.get('/api/get-clinic',clinicController.getAllClinic);
     router.get('/api/get-detail-clinic-by-id',clinicController.getDetailClinicById);
+
+    router.get('/api/get-booking',bookingController.getAllBooking);
     
     router.post('/api/create-new-posts',postsController.createNewPosts);
     router.get('/api/get-posts',postsController.getAllPosts);
