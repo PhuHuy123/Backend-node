@@ -123,9 +123,9 @@ let updatePasswordEmail = async(dataSend)=>{
 
     // send mail with defined transport object
     let info = await transporter.sendMail({
-        from: '"Khóa Luận Tốt nghiệp 👻" <zombiipark@gmail.com>', // sender address
+        from: '"Book my doctor 👻" <zombiipark@gmail.com>', // sender address
         to: dataSend.receiverEmail, // list of receivers
-        subject: "Thông tin đặt lịch khắm bệnh ✔", // Subject line
+        subject: "Reset Password ✔", // Subject line
         // text: "Hello world?", 
         html: getBodyHTMLEmailUpdatePassword(dataSend), // html body
     });

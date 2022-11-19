@@ -105,7 +105,7 @@ let handleCheckEmail = (userEmail) => {
                     // language: data.language,
                     redirectLink: buildUrlEmail(user.id, token)
                 })
-                user.token = token,               
+                user.token = token,           
                 await user.save();              
                 resolve({
                     errCode:0,
@@ -327,6 +327,35 @@ let getAllCodeService = (dataType)=>{
         }
      })
 }
+let resetTokenPassword =  (userEmail)=>{
+    return new Promise(async (resolve, reject) =>{
+        try {
+           let user = await db.User.findOne({
+               where: {email: userEmail},
+               raw: false
+           });
+           if(user){
+               
+               user.token = '',           
+               await user.save();              
+               resolve({
+                   errCode:0,
+                   message: "Ok"
+               });
+           }
+           else{
+               resolve({
+                   errCode:1,
+                   message: "Email không tồn tại"
+               });
+           }
+           resolve();
+       } catch (e) {
+           reject(e);
+       }
+    })
+    
+}
 module.exports = {
     handleUserLogin: handleUserLogin,
     handleUpdatePassword:handleUpdatePassword,
@@ -337,4 +366,5 @@ module.exports = {
     deleteUsers:deleteUsers,
     getAllCodeService:getAllCodeService,
     handleCheckEmail:handleCheckEmail,
+    resetTokenPassword:resetTokenPassword,
 }

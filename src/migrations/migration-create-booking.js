@@ -11,17 +11,29 @@ module.exports = {
       statusId: {
         type: Sequelize.STRING
       },
-      doctorId: {
-        type: Sequelize.INTEGER
-      },
       patientId: {
         type: Sequelize.INTEGER
       },
-      date: {
-        type: Sequelize.DATE
+      email: {
+        type: Sequelize.STRING,
       },
-      timeType: {
-        type: Sequelize.STRING
+      firstName: {
+        type: Sequelize.STRING,
+      },
+      lastName: {
+        type: Sequelize.STRING,
+      },
+      address: {
+        type: Sequelize.STRING,
+      },
+      phoneNumber: {
+        type: Sequelize.STRING,
+      },
+      gender: {
+        type: Sequelize.STRING,
+      },
+      birthday: {
+        type: Sequelize.DATE,
       },
       token: {
         type: Sequelize.STRING

@@ -103,13 +103,24 @@ let getAllCode = async (req, res)=>{
         let data = await userService.getAllCodeService(req.query.type)
         return res.status(200).json(data)
     } catch (e) {
-        console.log( "Get all code error: ",e)
         return res.status(200).json({
             errCode: -1,
             message: "Error from server",
         })
         
     }
+    
+}
+let resetTokenPassword = async (req, res)=>{
+    let email = req.body.email;
+    if(!email){
+        return res.status(500).json({
+            errCode: 10, 
+            message: "Khong hop le!"
+        })
+    }
+    let userData = await userService.resetTokenPassword(email)
+    return res.status(200).json({userData})
     
 }
 module.exports ={
@@ -122,6 +133,7 @@ module.exports ={
     handleUpdateUser: handleUpdateUser,
     handleDeleteNewUser: handleDeleteNewUser,
     getAllCode: getAllCode,
+    resetTokenPassword:resetTokenPassword,
     
 }
 
