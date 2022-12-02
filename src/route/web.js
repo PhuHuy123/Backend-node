@@ -9,6 +9,7 @@ import bookingController from "../controllers/bookingController";
 import postsController from "../controllers/postsController";
 import searchController from "../controllers/searchController";
 import examinationController from "../controllers/examinationController";
+import reCapTChaController from "../controllers/reCapTChaController";
 
 
 let router = express.Router();
@@ -40,6 +41,7 @@ let initWebRoutes = (app)=>{
     router.get('/api/get-detail-doctor-by-id',doctorController.getDetailDoctorById);
     router.post('/api/bulk-create-schedule', doctorController.bulkCreateSchedule);
     router.get('/api/get-Schedule-doctor-by-date',doctorController.getScheduleDoctorByDate);
+    router.get('/api/get-Schedule-doctor-all',doctorController.getScheduleDoctorALL);
     router.delete('/api/delete-schedule',doctorController.deleteSchedule);
     router.get('/api/get-extra-info-doctor-by-id',doctorController.getExtraInfoDoctorById);
     router.get('/api/get-profile-doctor-by-id',doctorController.getProfileDoctorById);
@@ -56,22 +58,34 @@ let initWebRoutes = (app)=>{
     router.post('/api/create-new-specialty',specialtyController.createNewSpecialty);
     router.get('/api/get-specialty',specialtyController.getAllSpecialty);
     router.get('/api/get-detail-specialty-by-id',specialtyController.getDetailSpecialtyById);
+    router.delete('/api/delete-specialty',specialtyController.deleteSpecialtyById);
+    router.put('/api/update-specialty',specialtyController.editSpecialty);
 
     router.post('/api/create-new-clinic',clinicController.createNewClinic);
     router.get('/api/get-clinic',clinicController.getAllClinic);
     router.get('/api/get-detail-clinic-by-id',clinicController.getDetailClinicById);
+    router.delete('/api/delete-clinic',clinicController.deleteClinicById);
+    router.put('/api/update-clinic',clinicController.editClinic);
 
     router.get('/api/get-booking',bookingController.getAllBooking);
+    router.get('/api/booking-single-by-id',bookingController.getBookingSingleId);
+    router.get('/api/cancel-book',bookingController.getCancelBook);
     
     router.post('/api/create-new-posts',postsController.createNewPosts);
     router.get('/api/get-posts',postsController.getAllPosts);
     router.get('/api/get-detail-posts-by-id',postsController.getDetailPostsById);
+    router.delete('/api/delete-post',postsController.deletePostById);
+    router.put('/api/update-post',postsController.editPost);
 
     router.get('/api/search',searchController.getSearchApi);
 
     router.post('/api/reset-token-password',userController.resetTokenPassword);
 
+    router.post('/api/recaptcha',reCapTChaController.postReCapTCha);
+
     router.post('/api/create-new-examination',examinationController.createExamination);
+
+    router.get('/api/get-all-examination-byId',examinationController.getAllExaminationById);
 
 
 

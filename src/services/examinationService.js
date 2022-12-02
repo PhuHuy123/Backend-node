@@ -6,7 +6,6 @@ import _ from "lodash";
 let createExamination = (data) => {
   return new Promise(async (resolve, reject) => {
     try {
-        console.log(data)
       if (
         !data.bookingId ||
         !data.doctorId ||
@@ -37,7 +36,55 @@ let createExamination = (data) => {
     }
   });
 };
-
+let getAllExaminationById = (id) => {
+  return new Promise(async(resolve, reject) =>{
+      try {
+          if(!id) {
+              resolve({
+                  errCode: 1,
+                  message: 'Missing parameters!'
+              })
+          }
+          else{
+              let data = {};
+              if(id === 'ALL'){                
+                  data = await db.Examination.findAll();
+              }
+              else{
+                  data = await db.Examination.findAll({
+                      where: {statusId: 'S3'},
+                      include:[
+                        {
+                          model: db.Booking,
+                          as: "dataBooking",
+                          where: {patientId: id},
+                        },
+                        {
+                          model: db.User,
+                          as: "dataDoctor",
+                          attributes: ["firstName","lastName"]
+                        },
+                        {
+                          model: db.Allcode,
+                          as: "timeTypeDataExamination",
+                          attributes: ["valueEn", "valueVi"],
+                        }
+                      ],
+                      raw: false,
+                  });
+              }
+              resolve({
+                  errCode:0,
+                  // message:'OK!',
+                  data
+              }) 
+          }
+      } catch (e) {
+          reject(e)
+      }
+  })
+}
 module.exports = {
   createExamination,
+  getAllExaminationById,
 };

@@ -276,8 +276,6 @@ let bulkCreateSchedule = (data) => {
               a.maxNumber === b.maxNumber
             );
           });
-          console.log("create", toCreate);
-          console.log("delete", toDelete);
           // create a new data
           if (toCreate && toCreate.length > 0) {
             await db.Schedule.bulkCreate(toCreate);
@@ -292,6 +290,47 @@ let bulkCreateSchedule = (data) => {
         resolve({
           errCode: 0,
           message: "OK! Create info",
+        });
+      }
+    } catch (e) {
+      reject(e);
+    }
+  });
+};
+let getScheduleDoctorALL = (doctorId) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      if (!doctorId) {
+        resolve({
+          errCode: 1,
+          message: "Missing getScheduleDoctorALL parameters !",
+        });
+      } else {
+        let dataSchedule = await db.Schedule.findAll({
+          where: {
+            doctorId: doctorId,
+          },
+          include: [
+            {
+              model: db.Allcode,
+              as: "timeTypeData",
+              attributes: ["valueEn", "valueVi"],
+            },
+            {
+              model: db.User,
+              as: "doctorData",
+              attributes: ["lastName", "firstName"],
+            },
+          ],
+          raw: false,
+          nest: true,
+        });
+        if (!dataSchedule) {
+          dataSchedule = [];
+        }
+        resolve({
+          errCode: 0,
+          data: dataSchedule,
         });
       }
     } catch (e) {
@@ -446,7 +485,6 @@ let getProfileDoctorById = (doctorId) => {
           raw: false,
           nest: true,
         });
-        console.log("212",data)
         if (data && data.image) {
           data.image = Buffer.from(data.image, "base64").toString("binary");
         }
@@ -561,7 +599,8 @@ let sendRemedy = (data) => {
         !data.bookingId ||
         !data.timeType ||
         !data.comment ||
-        !data.price
+        !data.price ||
+        !data.name
       ) {
         resolve({
           errCode: 1,
@@ -581,7 +620,7 @@ let sendRemedy = (data) => {
           appointment.statusId = "S3";
           appointment.comment = data.comment;
           appointment.price = data.price;
-          console.log(appointment)
+          appointment.name = data.name;
           await appointment.save();
         }
         // send email
@@ -658,7 +697,6 @@ let getCancelAppointment = (data) => {
 let postDoctorForward = (data) => {
   return new Promise(async (resolve, reject) => {
     try {
-      console.log(data)
       if (!data.clinicId || !data.specialtyId) {
         resolve({
           errCode: 1,
@@ -696,6 +734,7 @@ module.exports = {
   createInfoDoctor: createInfoDoctor,
   getDetailDoctorById: getDetailDoctorById,
   bulkCreateSchedule: bulkCreateSchedule,
+  getScheduleDoctorALL:getScheduleDoctorALL,
   getScheduleDoctorByDate: getScheduleDoctorByDate,
   getExtraInfoDoctorById: getExtraInfoDoctorById,
   getProfileDoctorById: getProfileDoctorById,

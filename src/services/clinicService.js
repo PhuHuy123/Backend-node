@@ -88,8 +88,67 @@ let getDetailClinicById = (inputId) => {
         }
     })
 }
+let deleteClinicById = (clinicId)=>{
+    return new Promise(async (resolve, reject) =>{
+         try {
+            let clinic = await db.Clinic.findOne({
+                where: {id: clinicId}
+            });
+            if(!clinic){ 
+                resolve({
+                    errCode: 2,
+                    message: 'Clinic khong ton tai'
+                });               
+            }
+            await db.Clinic.destroy({
+                where: {id: clinicId}
+            });
+            resolve({
+                errCode: 0,
+                message: 'OK Delete clinicId'
+            });
+        } catch (e) {
+            reject(e);
+        }
+     })
+}
+let editClinic=(data)=> {
+    return new Promise(async (resolve, reject) =>{
+         try {
+             if(!data.id || !data.name || !data.address || !data.contentMarkdown || !data.previewImgURL){
+                 resolve({
+                     errCode:2,
+                     message: "Khong tim thay user"
+                 });
+             }
+            let clinic = await db.Clinic.findOne({
+                where: {id: data.id},
+                raw:false
+            });
+            if(clinic){
+                clinic.name = data.name,
+                clinic.address = data.address,
+                clinic.descriptionMarkdown = data.contentMarkdown,
+                clinic.descriptionHTML = data.contentHTML
+                clinic.image = data.previewImgURL
+                
+                await clinic.save();
+                // let allUsers = await db.User.findAll();
+                resolve({
+                    errCode:0,
+                    message: "Update clinic pass"
+                });
+            }
+        } catch (e) {
+            reject(e);
+        }
+     })
+
+}
 module.exports = {
     createNewClinic:createNewClinic,
     getAllClinic:getAllClinic,
-    getDetailClinicById:getDetailClinicById
+    getDetailClinicById:getDetailClinicById,
+    deleteClinicById:deleteClinicById,
+    editClinic:editClinic,
 }

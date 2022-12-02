@@ -82,8 +82,67 @@ let getDetailPostsById = (inputId) => {
         }
     })
 }
+let deletePostById = (postId)=>{
+    return new Promise(async (resolve, reject) =>{
+         try {
+            let post = await db.Posts.findOne({
+                where: {id: postId}
+            });
+            if(!post){ 
+                resolve({
+                    errCode: 2,
+                    message: 'Post khong ton tai'
+                });               
+            }
+            await db.Posts.destroy({
+                where: {id: postId}
+            });
+            resolve({
+                errCode: 0,
+                message: 'OK Delete postId'
+            });
+        } catch (e) {
+            reject(e);
+        }
+     })
+}
+let editPost=(data)=> {
+    return new Promise(async (resolve, reject) =>{
+         try {
+             if(!data.id || !data.name || !data.description || !data.contentMarkdown || !data.previewImgURL){
+                 resolve({
+                     errCode:2,
+                     message: "Khong tim thay user"
+                 });
+             }
+            let post = await db.Posts.findOne({
+                where: {id: data.id},
+                raw:false
+            });
+            if(post){
+                post.description = data.description,
+                post.name = data.name,
+                post.descriptionMarkdown = data.contentMarkdown,
+                post.descriptionHTML = data.contentHTML
+                post.image = data.previewImgURL
+                
+                await post.save();
+                // let allUsers = await db.User.findAll();
+                resolve({
+                    errCode:0,
+                    message: "Update post pass"
+                });
+            }
+        } catch (e) {
+            reject(e);
+        }
+     })
+
+}
 module.exports = {
     createNewPosts:createNewPosts,
     getAllPosts:getAllPosts,
-    getDetailPostsById:getDetailPostsById
+    getDetailPostsById:getDetailPostsById,
+    deletePostById:deletePostById,
+    editPost:editPost,
 }

@@ -18,9 +18,22 @@ let handleUserLogin= (email, password) => {
             if(isExist){        
                 let user = await db.User.findOne({
                     where: {email: email},
-                    attributes: ['id', 'email', 'password', 'roleId','firstName','lastName'],
-                    raw: true,
-                })        
+                    // attributes: ['id', 'email', 'password', 'roleId','firstName','lastName'],
+                    include: [
+                        {
+                          model: db.Allcode,
+                          as: "genderData",
+                          attributes: ["valueEn", "valueVi"],
+                        }
+                    ],
+                    raw: false,
+                    nest: true,
+                });
+                if(user) {
+                    user.image? user.image = Buffer.from(user.image, 'base64').toString('binary'):
+                    user.image = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQNL_ZnOTpXSvhf1UaK7beHey2BX42U6solRA&usqp=CAU'
+                }     
+
                 if(user){
                     let checkPassword = await bcrypt.compareSync(password, user.password)
 
@@ -158,8 +171,20 @@ let getAllUsers = (userId) => {
                     where: {id: userId},
                     attributes:{
                         exclude: ['password']
-                    }
+                    },
+                    include: [
+                        {
+                          model: db.Allcode,
+                          as: "genderData",
+                          attributes: ["valueEn", "valueVi"],
+                        }
+                    ],
+                    raw: false,
+                    nest: true,
                 });
+                if(user) {
+                    user.image = Buffer.from(user.image, 'base64').toString('binary');
+                }
             }
             resolve(user);
         } catch (e) {
@@ -244,7 +269,7 @@ let getUserInfoById = (userId)=>{
 let updateUser=(data)=> {
     return new Promise(async (resolve, reject) =>{
          try {
-             if(!data.id || !data.roleId || !data.gender || !data.positionID){
+             if(!data.id || !data.roleId || !data.positionID){
                  resolve({
                      errCode:2,
                      message: "Khong tim thay user"

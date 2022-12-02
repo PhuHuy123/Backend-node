@@ -5,8 +5,8 @@ import _ from "lodash";
 import emailService from "./emailService";
 import { v4 as uuidv4 } from "uuid";
 
-let buildUrlEmail = (bookingId, doctorId, timeType, date, reason, token) => {
-  let res = `${process.env.URL_REACT}/verify-booking?token=${token}&doctorId=${doctorId}&bookingId=${bookingId}&timeType=${timeType}&date=${date}&reason=${reason}`;
+let buildUrlEmail = (bookingId, examinationId, token) => {
+  let res = `${process.env.URL_REACT}/verify-booking?token=${token}&examinationId=${examinationId}&bookingId=${bookingId}`;
   return res;
 };
 
@@ -14,6 +14,7 @@ let postBookAppointment = (data) => {
   return new Promise(async (resolve, reject) => {
     try {
       if (
+        !data.userId ||
         !data.doctorId ||
         !data.email ||
         !data.phoneNumber ||
@@ -23,7 +24,7 @@ let postBookAppointment = (data) => {
         !data.lastName ||
         !data.selectedGender ||
         !data.address ||
-        !data.timeType ||
+        !data.timeString ||
         !data.selectedGender
       ) {
         resolve({
@@ -32,54 +33,70 @@ let postBookAppointment = (data) => {
         });
       } else {
         
-        let user = await db.User.findOrCreate({
-          where: { email: data.email },
-          defaults: {
-            email: data.email,
-            roleId: "R3",
-            gender: data.selectedGender,
-            address: data.address,
-            firstName: data.firstName,
-            phoneNumber: data.phoneNumber,
-          },
-        });
-        if (user && user[0]) {
+        // let user = await db.User.findOrCreate({
+        //   where: { email: data.email },
+        //   defaults: {
+        //     email: data.email,
+        //     roleId: "R3",
+        //     gender: data.selectedGender,
+        //     address: data.address,
+        //     firstName: data.firstName,
+        //     phoneNumber: data.phoneNumber,
+        //   },
+        // });
           let token = uuidv4();
           let book = await db.Booking.findOrCreate({
             where: {
-              patientId: user[0].id,
+              patientId: data.userId,
               statusId: "S1",
             },
             defaults: {
               statusId: "S1",
-              patientId: user[0].id,
+              patientId: data.userId,
               email: data.email,
               firstName: data.firstName,
               lastName: data.lastName,
-              address: data.	address,
+              address: data.address,
               phoneNumber: data.phoneNumber,
               gender: data.selectedGender,
               birthday: data.birthday,
               token: token,
             },
           });
-          if(book){
-            await emailService.sendSimpleEmail({
-              receiverEmail: data.email,
-              patientName: data.firstName,
-              time: data.timeString,
-              doctorName: data.doctorName,
-              language: data.language,
-              phoneNumber: data.phoneNumber,
-              redirectLink: buildUrlEmail(book[0].id, data.doctorId, data.timeType, data.date,data.reason, token),
-            });
+          if(book[1]===true){
+            let examination =await db.Examination.findOrCreate({
+              where: {
+                bookingId: book[0].id,
+                doctorId: data.doctorId,
+                timeType: data.timeType,
+              },
+              defaults: {
+                bookingId: book[0].id,
+                statusId: "S1",
+                doctorId: data.doctorId,
+                date: data.date,
+                timeType: data.timeType,
+                reason:data.reason,
+              },
+            })
+            if(examination[1]===true){
+              await emailService.sendSimpleEmail({
+                receiverEmail: data.email,
+                patientName: data.firstName,
+                time: data.timeString,
+                doctorName: data.doctorName,
+                language: data.language,
+                phoneNumber: data.phoneNumber,
+                redirectLink: buildUrlEmail(book[0].id,examination[0].id, token),
+              });
+            }
           }
         }
         resolve({
           errCode: 0,
           message: "OK! Save info patient successfully",
         });
-      }
+      
     } catch (e) {
       reject(e);
     }
@@ -88,8 +105,7 @@ let postBookAppointment = (data) => {
 let postVerifyBookAppointment = (data) => {
   return new Promise(async (resolve, reject) => {
     try {
-      if (!data.doctorId || !data.timeType || 
-        !data.date || !data.reason || !data.token || !data.bookingId) {
+      if (!data.examinationId || !data.token || !data.bookingId) {
           resolve({
             errCode: 1,
             message: "Missing parameters !",
@@ -104,21 +120,17 @@ let postVerifyBookAppointment = (data) => {
           raw: false,
         });
         if (appointment) {
-          await db.Examination.findOrCreate({
+          let examination = await db.Examination.findOne({
             where: {
-              bookingId: data.bookingId,
-              doctorId: data.doctorId,
-              timeType: data.timeType,
+              id: data.examinationId,
+              statusId: "S1",
             },
-            defaults: {
-              bookingId: data.bookingId,
-              statusId: "S2",
-              doctorId: data.doctorId,
-              date: data.date,
-              timeType: data.timeType,
-              reason:data.reason,
-            },
+            raw: false,
           });
+          if(examination){
+            examination.statusId = "S2";
+            await examination.save();
+          }
           appointment.statusId = "S2";
           appointment.token = "";
 

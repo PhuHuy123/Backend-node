@@ -35,9 +35,32 @@ let getDetailSpecialtyById = async(req, res)=>{
             message: 'Error from getDetailSpecialtyById...'
         })
     }
-} 
+}
+let deleteSpecialtyById= async (req, res)=>{
+    if(!req.body.id){
+        return res.status(200).json({
+            errCode: 1, 
+            message: "Chua nhan duoc ID",
+            users:[]
+        })
+    }
+    let message = await specialtyService.deleteSpecialtyById(req.body.id)
+    return res.status(200).json(message)
+}
+let editSpecialty = async(req, res)=> {
+    if(!req.body.id){
+        return res.status(200).json({
+            errCode: 1, 
+            message: "Chua nhan duoc thông tin",
+        })
+    }
+    let message = await specialtyService.editSpecialty(req.body);
+    return res.status(200).json(message)
+}
 module.exports ={
     createNewSpecialty:createNewSpecialty,
     getAllSpecialty:getAllSpecialty,
-    getDetailSpecialtyById:getDetailSpecialtyById
+    getDetailSpecialtyById:getDetailSpecialtyById,
+    deleteSpecialtyById:deleteSpecialtyById,
+    editSpecialty:editSpecialty,
 }

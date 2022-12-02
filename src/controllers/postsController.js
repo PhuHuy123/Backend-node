@@ -36,8 +36,31 @@ let getDetailPostsById = async(req, res)=>{
         })
     }
 } 
+let deletePostById= async (req, res)=>{
+    if(!req.body.id){
+        return res.status(200).json({
+            errCode: 1, 
+            message: "Chua nhan duoc ID",
+            users:[]
+        })
+    }
+    let message = await postsService.deletePostById(req.body.id)
+    return res.status(200).json(message)
+}
+let editPost = async(req, res)=> {
+    if(!req.body.id){
+        return res.status(200).json({
+            errCode: 1, 
+            message: "Chua nhan duoc thông tin",
+        })
+    }
+    let message = await postsService.editPost(req.body);
+    return res.status(200).json(message)
+}
 module.exports ={
     createNewPosts:createNewPosts,
     getAllPosts:getAllPosts,
-    getDetailPostsById:getDetailPostsById
+    getDetailPostsById:getDetailPostsById,
+    deletePostById:deletePostById,
+    editPost:editPost,
 }

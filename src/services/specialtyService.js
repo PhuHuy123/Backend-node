@@ -97,8 +97,66 @@ let getDetailSpecialtyById = (inputId, location) => {
         }
     })
 }
+let deleteSpecialtyById = (specialtyId)=>{
+    return new Promise(async (resolve, reject) =>{
+         try {
+            let specialty = await db.Specialty.findOne({
+                where: {id: specialtyId}
+            });
+            if(!specialty){ 
+                resolve({
+                    errCode: 2,
+                    message: 'Specialty khong ton tai'
+                });               
+            }
+            await db.Specialty.destroy({
+                where: {id: specialtyId}
+            });
+            resolve({
+                errCode: 0,
+                message: 'OK Delete specialtyId'
+            });
+        } catch (e) {
+            reject(e);
+        }
+     })
+}
+let editSpecialty=(data)=> {
+    return new Promise(async (resolve, reject) =>{
+         try {
+             if(!data.id || !data.name || !data.contentMarkdown || !data.previewImgURL){
+                 resolve({
+                     errCode:2,
+                     message: "Khong tim thay user"
+                 });
+             }
+            let specialty = await db.Specialty.findOne({
+                where: {id: data.id},
+                raw:false
+            });
+            if(specialty){
+                specialty.name = data.name,
+                specialty.descriptionMarkdown = data.contentMarkdown,
+                specialty.descriptionHTML = data.contentHTML
+                specialty.image = data.previewImgURL
+                
+                await specialty.save();
+                // let allUsers = await db.User.findAll();
+                resolve({
+                    errCode:0,
+                    message: "Update specialty pass"
+                });
+            }
+        } catch (e) {
+            reject(e);
+        }
+     })
+
+}
 module.exports = {
     createNewSpecialty:createNewSpecialty,
     getAllSpecialty:getAllSpecialty,
-    getDetailSpecialtyById:getDetailSpecialtyById
+    getDetailSpecialtyById:getDetailSpecialtyById,
+    deleteSpecialtyById:deleteSpecialtyById,
+    editSpecialty:editSpecialty,
 }

@@ -36,8 +36,31 @@ let getDetailClinicById = async(req, res)=>{
         })
     }
 } 
+let deleteClinicById= async (req, res)=>{
+    if(!req.body.id){
+        return res.status(200).json({
+            errCode: 1, 
+            message: "Chua nhan duoc ID",
+            users:[]
+        })
+    }
+    let message = await clinicService.deleteClinicById(req.body.id)
+    return res.status(200).json(message)
+}
+let editClinic = async(req, res)=> {
+    if(!req.body.id){
+        return res.status(200).json({
+            errCode: 1, 
+            message: "Chua nhan duoc thông tin",
+        })
+    }
+    let message = await clinicService.editClinic(req.body);
+    return res.status(200).json(message)
+}
 module.exports ={
     createNewClinic:createNewClinic,
     getAllClinic:getAllClinic,
-    getDetailClinicById:getDetailClinicById
+    getDetailClinicById:getDetailClinicById,
+    deleteClinicById:deleteClinicById,
+    editClinic:editClinic,
 }
