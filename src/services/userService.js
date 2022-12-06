@@ -268,6 +268,7 @@ let getUserInfoById = (userId)=>{
 
 let updateUser=(data)=> {
     return new Promise(async (resolve, reject) =>{
+        console.log(data);
          try {
              if(!data.id || !data.roleId || !data.positionID){
                  resolve({
@@ -280,23 +281,54 @@ let updateUser=(data)=> {
                 raw:false
             });
             if(user){
-                user.firstName = data.firstName,
-                user.lastName = data.lastName,
-                user.address = data.address,
-                user.phoneNumber = data.phoneNumber,
-                user.gender = data.gender,
-                user.roleId = data.roleId,
-                user.positionID = data.positionID;
-                if(data.image){
-                    user.image = data.image
+                if(user.email === data.email){
+                    user.firstName = data.firstName,
+                    user.lastName = data.lastName,
+                    user.address = data.address,
+                    user.phoneNumber = data.phoneNumber,
+                    user.gender = data.gender,
+                    user.roleId = data.roleId,
+                    user.positionID = data.positionID;
+                    if(data.image){
+                        user.image = data.image
+                    }
+                    await user.save();
+                    resolve({
+                        errCode:0,
+                        message: "Update user successfully"
+                    });
                 }
-                
-                await user.save();
-                // let allUsers = await db.User.findAll();
-                resolve({
-                    errCode:0,
-                    message: "Update user pass"
-                });
+                else{
+                    let checkEmail = await db.User.findOne({
+                        where: {email: data.email},
+                        raw:false
+                    });
+                    if(checkEmail){
+                        resolve({
+                            errCode: 10,
+                            message: "Email đã tồn tại"
+                        });
+                    }
+                    else{
+                        user.email = data.email
+                        user.firstName = data.firstName,
+                        user.lastName = data.lastName,
+                        user.address = data.address,
+                        user.phoneNumber = data.phoneNumber,
+                        user.gender = data.gender,
+                        user.roleId = data.roleId,
+                        user.positionID = data.positionID;
+                        if(data.image){
+                            user.image = data.image
+                        }
+                        
+                        await user.save();
+                        resolve({
+                            errCode:0,
+                            message: "Update user successfully"
+                        });
+                    }
+                }
             }
         } catch (e) {
             reject(e);
