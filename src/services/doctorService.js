@@ -518,7 +518,7 @@ let getListPatientForDoctor = (doctorId, date) => {
               {
                 model: db.Booking,
                 as: 'dataBooking',
-                attributes: ["email","address","birthday", "firstName","lastName", "gender", "phoneNumber"],
+                attributes: ["patientId","email","address","birthday", "firstName","lastName", "gender", "phoneNumber"],
                 include: [
                   {
                     model: db.Allcode,
@@ -559,7 +559,7 @@ let getListPatientForDoctor = (doctorId, date) => {
             {
               model: db.Booking,
               as: 'dataBooking',
-              attributes: ["email","address","birthday", "firstName","lastName", "gender", "phoneNumber"],
+              attributes: ["patientId","email","address","birthday", "firstName","lastName", "gender", "phoneNumber"],
               include: [
                 {
                   model: db.Allcode,

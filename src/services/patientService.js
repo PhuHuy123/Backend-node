@@ -90,6 +90,27 @@ let postBookAppointment = (data) => {
                 redirectLink: buildUrlEmail(book[0].id,examination[0].id, token),
               });
             }
+            var CronJob = require('cron').CronJob;
+            const job = new CronJob('*/1 * * * *',async function() {
+              let remote = await db.Booking.findOne({
+                where: {
+                  id:  book[0].id,
+                  statusId: "S1",
+                }
+            });
+                if(remote){ 
+                  await db.Booking.destroy({
+                    where: {id:  book[0].id,}
+                });
+                await db.Examination.destroy({
+                  where: {
+                    bookingId:  book[0].id,
+                  }
+                });           
+              }
+              job.stop();
+            });
+            job.start();
           }
         }
         resolve({
