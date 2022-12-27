@@ -11,9 +11,15 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      Posts.belongsTo(models.User, {
+        foreignKey: "adminId",
+        targetKey: "id",
+        as: 'adminData'
+      });
     }
   };
   Posts.init({
+    adminId: DataTypes.INTEGER,
     description: DataTypes.TEXT('long'),
     descriptionHTML: DataTypes.TEXT('long'),
     descriptionMarkdown: DataTypes.TEXT('long'),

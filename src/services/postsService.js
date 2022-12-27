@@ -18,7 +18,8 @@ let createNewPosts = (data) => {
                     descriptionMarkdown: data.contentMarkdown,
                     image: data.imageBase64,
                     name : data.name,
-                    description: data.description
+                    description: data.description,
+                    adminId: data.adminId,
                 })
                 resolve({
                     errCode:0,

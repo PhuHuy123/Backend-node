@@ -44,10 +44,10 @@ let getAllBooking = (input) => {
             else{
                 let data = {};
                 if(input === 'ALL'){                
-                    data = await db.Booking.findAll();
+                    data = await db.Examination.findAll();
                 }
                 else{
-                    data = await db.Booking.findAll({
+                    data = await db.Examination.findAll({
                         where: {doctorId: input}
                     });
                 }

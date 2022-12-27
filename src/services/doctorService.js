@@ -300,13 +300,33 @@ let bulkCreateSchedule = (data) => {
 let getScheduleDoctorALL = (doctorId) => {
   return new Promise(async (resolve, reject) => {
     try {
+      let dataSchedule=''
       if (!doctorId) {
         resolve({
           errCode: 1,
           message: "Missing getScheduleDoctorALL parameters !",
         });
       } else {
-        let dataSchedule = await db.Schedule.findAll({
+        if(doctorId === 'ALL'){                
+          dataSchedule = await db.Schedule.findAll({
+            include: [
+              {
+                model: db.Allcode,
+                as: "timeTypeData",
+                attributes: ["valueEn", "valueVi"],
+              },
+              {
+                model: db.User,
+                as: "doctorData",
+                attributes: ["lastName", "firstName"],
+              },
+            ],
+            raw: false,
+            nest: true,
+          });
+        }
+      if(doctorId !== 'ALL'){
+        dataSchedule = await db.Schedule.findAll({
           where: {
             doctorId: doctorId,
           },
@@ -325,6 +345,7 @@ let getScheduleDoctorALL = (doctorId) => {
           raw: false,
           nest: true,
         });
+      }
         if (!dataSchedule) {
           dataSchedule = [];
         }
@@ -510,10 +531,6 @@ let getListPatientForDoctor = (doctorId, date) => {
         let dataInfo=[];
         if(date=== 'ALL'){
           dataInfo = await db.Examination.findAll({
-            where: {
-              // statusId: "S2",
-              doctorId: doctorId,
-            },
             include: [
               {
                 model: db.Booking,
@@ -528,21 +545,21 @@ let getListPatientForDoctor = (doctorId, date) => {
                 ],
               },
               {
+                model: db.User,
+                as: 'dataDoctor',
+                attributes: {
+                  exclude: ["password"],
+                },
+                include: [{
+                  model: db.DoctorInfo,
+                  as: "DoctorInfo",
+                },
+                ]
+              },
+              {
                 model: db.Allcode,
                 as: "timeTypeDataExamination",
                 attributes: ["valueEn", "valueVi"],
-              },
-              {
-                model: db.User,
-                as: "dataDoctor",
-                attributes: ["firstName","lastName"],
-                include: [
-                  {
-                    model: db.DoctorInfo,
-                    attributes: { exclude: ["id", "doctorId"] },
-                    attributes: ["clinicId", "specialtyId"],
-                  },
-                ],
               },
             ],
             raw: false,
@@ -567,6 +584,18 @@ let getListPatientForDoctor = (doctorId, date) => {
                   attributes: ["valueEn", "valueVi"],
                 },
               ],
+            },
+            {
+              model: db.User,
+              as: 'dataDoctor',
+              attributes: {
+                exclude: ["password"],
+              },
+              include: [{
+                model: db.DoctorInfo,
+                as: "DoctorInfo",
+              },
+              ]
             },
             {
               model: db.Allcode,
@@ -712,7 +741,7 @@ let postDoctorForward = (data) => {
           include:[
             {
               model: db.User,
-              // as: "dataDoctor",
+              // as: "DoctorInfo",
               attributes: ["firstName","lastName"],
             }
           ],

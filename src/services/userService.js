@@ -42,6 +42,26 @@ let handleUserLogin= (email, password) => {
                         userData.errMessage ="OK";
                         delete user.password;
                         userData.user=user;
+                        var CronJob = require('cron').CronJob;
+                        const job = new CronJob('0 0 * * *',async function() {
+                            let data = await db.Examination.findAll();
+                            
+                            data.map(async(item)=>{
+                                if(item.date < new Date(new Date().setHours(0,0,0,0)) && item.statusId === "S2"){ 
+                                    let examination = await db.Examination.findOne({
+                                        where: {
+                                          id: item.id,
+                                        },
+                                        raw:false
+                                    })
+                                    if (examination) {
+                                        examination.statusId = "S0";
+                                        await examination.save();
+                                    }
+                                }
+                            })
+                        });
+                        job.start();
                     }
                     else{
                         userData.errCode = 3;
@@ -174,16 +194,16 @@ let getAllUsers = (userId) => {
                     },
                     include: [
                         {
-                          model: db.Allcode,
-                          as: "genderData",
-                          attributes: ["valueEn", "valueVi"],
+                            model: db.Allcode,
+                            as: "genderData",
+                            attributes: ["valueEn", "valueVi"],
                         }
                     ],
                     raw: false,
                     nest: true,
                 });
-                if(user) {
-                    user.image = Buffer.from(user.image, 'base64').toString('binary');
+                if(user && user.image) {
+                    user.image = Buffer.from(user?.image, 'base64').toString('binary');
                 }
             }
             resolve(user);
@@ -268,7 +288,6 @@ let getUserInfoById = (userId)=>{
 
 let updateUser=(data)=> {
     return new Promise(async (resolve, reject) =>{
-        console.log(data);
          try {
              if(!data.id || !data.roleId || !data.positionID){
                  resolve({
@@ -280,11 +299,11 @@ let updateUser=(data)=> {
                 where: {id: data.id},
                 raw:false
             });
-            if(user){
+            if(user && user.roleId !=='R1'){
                 if(user.email === data.email){
                     user.firstName = data.firstName,
                     user.lastName = data.lastName,
-                    user.address = data.address,
+                    user.address = data.address,    
                     user.phoneNumber = data.phoneNumber,
                     user.gender = data.gender,
                     user.roleId = data.roleId,
@@ -343,10 +362,10 @@ let deleteUsers = (userId)=>{
             let user = await db.User.findOne({
                 where: {id: userId}
             });
-            if(!user){ 
+            if(!user || user.roleId === 'R1'){ 
                 resolve({
                     errCode: 2,
-                    message: 'User khong ton tai'
+                    message: 'Xóa Không thành công'
                 });               
             }
             await db.User.destroy({
