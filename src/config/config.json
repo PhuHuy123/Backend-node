@@ -1,15 +1,16 @@
 {
   "development": {
     "username": "root",
-    "password": null,
-    "database": "CSDLWeb",
-    "host": "db",
+    "password": "password",
+    "database": "webTVSucKhoe",
+    "host": "localhost",
     "dialect": "mysql",
     "logging": false,
     "query":{
       "raw":true
     },  
-    "timezone": "+07:00"
+    "timezone": "+07:00",
+    "port": 33061
   },
   "test": {
     "username": "root",
@@ -20,9 +21,10 @@
   },
   "production": {
     "username": "root",
-    "password": null,
-    "database": "database_production",
+    "password": "password",
+    "database": "webTVSucKhoe",
     "host": "db",
-    "dialect": "mysql"
+    "dialect": "mysql",
+    "port": 3306
   }
 }
