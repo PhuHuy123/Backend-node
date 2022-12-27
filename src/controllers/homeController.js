@@ -1,9 +1,9 @@
 import db from '../models/index'
-import CRUDService from '../services/CRUDService'
+import * as CRUDService from '../services/CRUDService'
 
-let getHomePage= async(req, res)=> {
+const getHomePage= async(req, res)=> {
     try {
-        let data = await db.User.findAll();
+        const data = await db.User.findAll();
         return res.render('homePage.ejs',{
             data: JSON.stringify(data)
         });
@@ -12,15 +12,15 @@ let getHomePage= async(req, res)=> {
     }
 }
 
-let getCRUD=(req, res)=> {
+const getCRUD=(req, res)=> {
     return res.render('crud.ejs');
 }
-let postCRUD= async(req, res)=> {
-    let message = await CRUDService.createNewUser(req.body);
+const postCRUD= async(req, res)=> {
+    const message = await CRUDService.createNewUser(req.body);
     return res.send(message);
 }
-let displayGetCRUD = async(req, res)=> {
-    let data = await CRUDService.getAllUsers({
+const displayGetCRUD = async(req, res)=> {
+    const data = await CRUDService.getAllUsers({
         raw: true,
     });
     return res.render('displayCRUD.ejs',{
@@ -28,10 +28,10 @@ let displayGetCRUD = async(req, res)=> {
     });
 }
 
-let getEditCRUD = async(req,res)=>{
-    let userId = req.query.id;
+const getEditCRUD = async(req,res)=>{
+    const userId = req.query.id;
     if(userId){
-        let userData = await CRUDService.getUserInfoById(userId);
+        const userData = await CRUDService.getUserInfoById(userId);
         return res.render('editCRUD.ejs',{
             user:userData,
         });
@@ -40,13 +40,13 @@ let getEditCRUD = async(req,res)=>{
         return res.send("User not found")
     }
 }
-let putCRUD = async(req, res)=> {
-    let allUsers = await CRUDService.updateUserData(req.body);
+const putCRUD = async(req, res)=> {
+    const allUsers = await CRUDService.updateUserData(req.body);
     return res.render('displayCRUD.ejs',{
          dataTable: allUsers
     });
 }
-let deleteCRUD = async(req,res)=> {
+const deleteCRUD = async(req,res)=> {
     if(req.query.id){
         await CRUDService.deleteUserById(req.query.id);
         return res.send("Delete Thanh cong!")
@@ -55,13 +55,13 @@ let deleteCRUD = async(req,res)=> {
         return res.send("It's not user ID!")
     }
 }
-module.exports ={
-    getHomePage:getHomePage,
-    getCRUD:getCRUD,
-    postCRUD:postCRUD,
-    displayGetCRUD:displayGetCRUD,
-    getEditCRUD:getEditCRUD,
-    putCRUD:putCRUD,
-    deleteCRUD:deleteCRUD
+export {
+    getHomePage as getHomePage,
+    getCRUD as getCRUD,
+    postCRUD as postCRUD,
+    displayGetCRUD as displayGetCRUD,
+    getEditCRUD as getEditCRUD,
+    putCRUD as putCRUD,
+    deleteCRUD as deleteCRUD
 }
 // req.body "du lieu trong trang truyen ve khi click submit"

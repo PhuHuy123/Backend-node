@@ -140,10 +140,10 @@ let editPost=(data)=> {
      })
 
 }
-module.exports = {
-    createNewPosts:createNewPosts,
-    getAllPosts:getAllPosts,
-    getDetailPostsById:getDetailPostsById,
-    deletePostById:deletePostById,
-    editPost:editPost,
+export {
+    createNewPosts as createNewPosts,
+    getAllPosts as getAllPosts,
+    getDetailPostsById as getDetailPostsById,
+    deletePostById as deletePostById,
+    editPost as editPost,
 }

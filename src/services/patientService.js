@@ -2,7 +2,7 @@ import db from "../models/index";
 import bcrypt from "bcryptjs";
 require("dotenv").config();
 import _ from "lodash";
-import emailService from "./emailService";
+import * as emailService from "./emailService";
 import { v4 as uuidv4 } from "uuid";
 
 let buildUrlEmail = (bookingId, examinationId, token) => {
@@ -220,8 +220,8 @@ let postVerifyPaypal = (data) => {
     }
   });
 };
-module.exports = {
-  postBookAppointment: postBookAppointment,
-  postVerifyBookAppointment: postVerifyBookAppointment,
-  postVerifyPaypal: postVerifyPaypal,
+export {
+  postBookAppointment as  postBookAppointment,
+  postVerifyBookAppointment as  postVerifyBookAppointment,
+  postVerifyPaypal as  postVerifyPaypal,
 };

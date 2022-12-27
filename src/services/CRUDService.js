@@ -99,10 +99,10 @@ let deleteUserById = (userId)=>{
         }
      })
 }
-module.exports = {
-    createNewUser: createNewUser,
-    getAllUsers: getAllUsers,
-    getUserInfoById:getUserInfoById,
-    updateUserData:updateUserData,
-    deleteUserById: deleteUserById
+export {
+    createNewUser as  createNewUser,
+    getAllUsers as  getAllUsers,
+    getUserInfoById as getUserInfoById,
+    updateUserData as updateUserData,
+    deleteUserById as  deleteUserById
 }

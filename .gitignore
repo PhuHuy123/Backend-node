@@ -4,4 +4,6 @@
 .idea/
 .env
 package-lock.json
+/dist
+
  

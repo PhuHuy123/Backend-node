@@ -1,4 +1,4 @@
-import examinationService from '../services/examinationService'
+import * as examinationService from '../services/examinationService'
 
 let createExamination = async(req, res)=>{
     try {
@@ -24,7 +24,7 @@ let getAllExaminationById = async(req, res)=>{
         })
     }
 }
-module.exports ={
+export {
     createExamination,
     getAllExaminationById,
 }

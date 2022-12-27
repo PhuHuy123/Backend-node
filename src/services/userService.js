@@ -1,7 +1,7 @@
 import db from '../models/index'
 import bcrypt from 'bcryptjs';
 const salt = bcrypt.genSaltSync(10);
-import emailService from './emailService'
+import * as emailService from './emailService'
 import { v4 as uuidv4 } from 'uuid'
 
 let buildUrlEmail = (doctorId, token)=>{
@@ -432,15 +432,15 @@ let resetTokenPassword =  (userEmail)=>{
     })
     
 }
-module.exports = {
-    handleUserLogin: handleUserLogin,
-    handleUpdatePassword:handleUpdatePassword,
-    getAllUsers:getAllUsers,
-    getNewUsers:getNewUsers,
-    getUserInfoById:getUserInfoById,
-    updateUser:updateUser,
-    deleteUsers:deleteUsers,
-    getAllCodeService:getAllCodeService,
-    handleCheckEmail:handleCheckEmail,
-    resetTokenPassword:resetTokenPassword,
+export {
+    handleUserLogin as  handleUserLogin,
+    handleUpdatePassword as handleUpdatePassword,
+    getAllUsers as getAllUsers,
+    getNewUsers as getNewUsers,
+    getUserInfoById as getUserInfoById,
+    updateUser as updateUser,
+    deleteUsers as deleteUsers,
+    getAllCodeService as getAllCodeService,
+    handleCheckEmail as handleCheckEmail,
+    resetTokenPassword as resetTokenPassword,
 }

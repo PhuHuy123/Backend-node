@@ -3,7 +3,7 @@ import bcrypt from "bcryptjs";
 const salt = bcrypt.genSaltSync(10);
 require("dotenv").config();
 import _ from "lodash";
-import emailService from "./emailService";
+import * as emailService from "./emailService";
 const MAX_NUMBER_SCHEDULE = process.env.MAX_NUMBER_SCHEDULE;
 
 let getTopDoctorHomeService = (limitInput) => {
@@ -757,19 +757,19 @@ let postDoctorForward = (data) => {
     }
   });
 };
-module.exports = {
-  getTopDoctorHomeService: getTopDoctorHomeService,
-  getAllDoctorsService: getAllDoctorsService,
-  createInfoDoctor: createInfoDoctor,
-  getDetailDoctorById: getDetailDoctorById,
-  bulkCreateSchedule: bulkCreateSchedule,
-  getScheduleDoctorALL:getScheduleDoctorALL,
-  getScheduleDoctorByDate: getScheduleDoctorByDate,
-  getExtraInfoDoctorById: getExtraInfoDoctorById,
-  getProfileDoctorById: getProfileDoctorById,
-  getListPatientForDoctor: getListPatientForDoctor,
-  sendRemedy: sendRemedy,
-  deleteSchedule:deleteSchedule,
-  getCancelAppointment:getCancelAppointment,
-  postDoctorForward:postDoctorForward,
+export {
+  getTopDoctorHomeService as  getTopDoctorHomeService,
+  getAllDoctorsService as  getAllDoctorsService,
+  createInfoDoctor as  createInfoDoctor,
+  getDetailDoctorById as  getDetailDoctorById,
+  bulkCreateSchedule as  bulkCreateSchedule,
+  getScheduleDoctorALL as getScheduleDoctorALL,
+  getScheduleDoctorByDate as  getScheduleDoctorByDate,
+  getExtraInfoDoctorById as  getExtraInfoDoctorById,
+  getProfileDoctorById as  getProfileDoctorById,
+  getListPatientForDoctor as  getListPatientForDoctor,
+  sendRemedy as  sendRemedy,
+  deleteSchedule as deleteSchedule,
+  getCancelAppointment as getCancelAppointment,
+  postDoctorForward as postDoctorForward,
 };

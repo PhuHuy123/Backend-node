@@ -130,8 +130,8 @@ let getBookingSingleId = (patientId) => {
         }
     })
   }
-module.exports = {
-    getCancelBook:getCancelBook,
-    getAllBooking:getAllBooking,
+export {
+    getCancelBook as getCancelBook,
+    getAllBooking as getAllBooking,
     getBookingSingleId,
 }

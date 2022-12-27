@@ -1,4 +1,4 @@
-import clinicService from '../services/clinicService'
+import *as clinicService from '../services/clinicService'
 
 let createNewClinic = async(req, res)=>{
     try {
@@ -57,10 +57,10 @@ let editClinic = async(req, res)=> {
     let message = await clinicService.editClinic(req.body);
     return res.status(200).json(message)
 }
-module.exports ={
-    createNewClinic:createNewClinic,
-    getAllClinic:getAllClinic,
-    getDetailClinicById:getDetailClinicById,
-    deleteClinicById:deleteClinicById,
-    editClinic:editClinic,
+export {
+    createNewClinic as createNewClinic,
+    getAllClinic as getAllClinic,
+    getDetailClinicById as getDetailClinicById,
+    deleteClinicById as deleteClinicById,
+    editClinic as editClinic,
 }

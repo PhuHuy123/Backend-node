@@ -84,7 +84,7 @@ let getAllExaminationById = (id) => {
       }
   })
 }
-module.exports = {
+export {
   createExamination,
   getAllExaminationById,
 };

@@ -1,5 +1,5 @@
 import db from '../models/index'
-import doctorService from '../services/doctorService'
+import * as doctorService from '../services/doctorService'
 
 let getTopDoctorHome= async(req, res)=>{
     let limit = req.query.limit
@@ -157,19 +157,19 @@ let postDoctorForward = async(req, res)=>{
         })
     }
 }
-module.exports ={
-    getTopDoctorHome:getTopDoctorHome,
-    getAllDoctors: getAllDoctors,
-    postInfoDoctor:postInfoDoctor,
-    getDetailDoctorById:getDetailDoctorById,
-    bulkCreateSchedule: bulkCreateSchedule,
-    getScheduleDoctorByDate:getScheduleDoctorByDate,
-    getScheduleDoctorALL:getScheduleDoctorALL,
-    getExtraInfoDoctorById:getExtraInfoDoctorById,
-    getProfileDoctorById:getProfileDoctorById,
-    getListPatientForDoctor:getListPatientForDoctor,
-    sendRemedy:sendRemedy,
-    deleteSchedule:deleteSchedule,
-    getCancelAppointment:getCancelAppointment,
-    postDoctorForward:postDoctorForward,
+export {
+    getTopDoctorHome as getTopDoctorHome,
+    getAllDoctors as  getAllDoctors,
+    postInfoDoctor as postInfoDoctor,
+    getDetailDoctorById as getDetailDoctorById,
+    bulkCreateSchedule as  bulkCreateSchedule,
+    getScheduleDoctorByDate as getScheduleDoctorByDate,
+    getScheduleDoctorALL as getScheduleDoctorALL,
+    getExtraInfoDoctorById as getExtraInfoDoctorById,
+    getProfileDoctorById as getProfileDoctorById,
+    getListPatientForDoctor as getListPatientForDoctor,
+    sendRemedy as sendRemedy,
+    deleteSchedule as deleteSchedule,
+    getCancelAppointment as getCancelAppointment,
+    postDoctorForward as postDoctorForward,
 }

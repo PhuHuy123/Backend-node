@@ -1,4 +1,4 @@
-import searchService from '../services/searchService'
+import * as searchService from '../services/searchService'
 
 let getSearchApi = async(req, res)=>{
     try {
@@ -12,6 +12,6 @@ let getSearchApi = async(req, res)=>{
         })
     }
 }
-module.exports ={
-    getSearchApi:getSearchApi,
+export {
+    getSearchApi as getSearchApi,
 }

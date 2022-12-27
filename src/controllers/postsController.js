@@ -1,4 +1,4 @@
-import postsService from '../services/postsService'
+import * as postsService from '../services/postsService'
 
 let createNewPosts = async(req, res)=>{
     try {
@@ -57,10 +57,10 @@ let editPost = async(req, res)=> {
     let message = await postsService.editPost(req.body);
     return res.status(200).json(message)
 }
-module.exports ={
-    createNewPosts:createNewPosts,
-    getAllPosts:getAllPosts,
-    getDetailPostsById:getDetailPostsById,
-    deletePostById:deletePostById,
-    editPost:editPost,
+export {
+    createNewPosts as createNewPosts,
+    getAllPosts as getAllPosts,
+    getDetailPostsById as getDetailPostsById,
+    deletePostById as deletePostById,
+    editPost as editPost,
 }

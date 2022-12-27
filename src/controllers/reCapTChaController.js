@@ -1,6 +1,6 @@
 const axios = require('axios');
 require('dotenv').config();
-import reCapTChaService from '../services/reCapTChaService';
+import * as reCapTChaService from '../services/reCapTChaService';
 let postReCapTCha = async(req, res)=>{
     try {
         let info = await reCapTChaService.postReCapTCha(req.body);
@@ -13,6 +13,6 @@ let postReCapTCha = async(req, res)=>{
         })
     }
 }
-module.exports ={
+export {
     postReCapTCha,
 }

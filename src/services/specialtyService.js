@@ -153,10 +153,10 @@ let editSpecialty=(data)=> {
      })
 
 }
-module.exports = {
-    createNewSpecialty:createNewSpecialty,
-    getAllSpecialty:getAllSpecialty,
-    getDetailSpecialtyById:getDetailSpecialtyById,
-    deleteSpecialtyById:deleteSpecialtyById,
-    editSpecialty:editSpecialty,
+export {
+    createNewSpecialty as createNewSpecialty,
+    getAllSpecialty as getAllSpecialty,
+    getDetailSpecialtyById as getDetailSpecialtyById,
+    deleteSpecialtyById as deleteSpecialtyById,
+    editSpecialty as editSpecialty,
 }
