@@ -30,6 +30,6 @@ let postReCapTCha = (data) => {
   });
 };
 
-module.exports = {
+export {
   postReCapTCha,
 };

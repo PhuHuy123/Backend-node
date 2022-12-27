@@ -1,8 +1,8 @@
 const { Sequelize } = require('sequelize');
 
 // Option 3: Passing parameters separately (other dialects)
-const sequelize = new Sequelize('webTVSucKhoe', 'root', null, {
-  host: 'localhost',// dia chi server
+const sequelize = new Sequelize('webTVSucKhoe', 'root', 'password', {
+  host: 'db',// dia chi server
   dialect: 'mysql',
   logging: false
 });
@@ -15,4 +15,4 @@ let connectDB = async() => {
         console.error('Unable to connect to the database:', error);
     }
 }
-module.exports = connectDB;
+export default connectDB;

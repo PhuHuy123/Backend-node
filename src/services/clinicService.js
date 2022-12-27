@@ -145,10 +145,10 @@ let editClinic=(data)=> {
      })
 
 }
-module.exports = {
-    createNewClinic:createNewClinic,
-    getAllClinic:getAllClinic,
-    getDetailClinicById:getDetailClinicById,
-    deleteClinicById:deleteClinicById,
-    editClinic:editClinic,
+export {
+    createNewClinic as createNewClinic,
+    getAllClinic as getAllClinic,
+    getDetailClinicById as getDetailClinicById,
+    deleteClinicById as deleteClinicById,
+    editClinic as editClinic,
 }

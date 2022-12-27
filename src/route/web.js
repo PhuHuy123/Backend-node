@@ -1,15 +1,15 @@
 import express  from "express";
-import homeController from "../controllers/homeController";
-import userController from "../controllers/userController";
-import doctorController from "../controllers/doctorController";
-import patientController from "../controllers/patientController";
-import specialtyController from "../controllers/specialtyController";
-import clinicController from "../controllers/clinicController";
-import bookingController from "../controllers/bookingController";
-import postsController from "../controllers/postsController";
-import searchController from "../controllers/searchController";
-import examinationController from "../controllers/examinationController";
-import reCapTChaController from "../controllers/reCapTChaController";
+import * as homeController from "../controllers/homeController";
+import * as userController from "../controllers/userController";
+import * as doctorController from "../controllers/doctorController";
+import * as patientController from "../controllers/patientController";
+import * as specialtyController from "../controllers/specialtyController";
+import * as clinicController from "../controllers/clinicController";
+import * as bookingController from "../controllers/bookingController";
+import * as postsController from "../controllers/postsController";
+import * as searchController from "../controllers/searchController";
+import * as examinationController from "../controllers/examinationController";
+import * as reCapTChaController from "../controllers/reCapTChaController";
 
 
 let router = express.Router();
@@ -91,4 +91,4 @@ let initWebRoutes = (app)=>{
 
     return app.use("/", router);
 }
-module.exports = initWebRoutes;
+export default initWebRoutes;

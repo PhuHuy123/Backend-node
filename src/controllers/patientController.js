@@ -1,4 +1,4 @@
-import patientService from '../services/patientService'
+import * as patientService from '../services/patientService'
 
 let postBookAppointment = async(req, res)=>{
     try {
@@ -36,8 +36,8 @@ let postVerifyPaypal = async(req, res)=>{
         })
     }
 }
-module.exports ={
-    postBookAppointment:postBookAppointment,
-    postVerifyBookAppointment:postVerifyBookAppointment,
-    postVerifyPaypal:postVerifyPaypal,
+export {
+    postBookAppointment as postBookAppointment,
+    postVerifyBookAppointment as postVerifyBookAppointment,
+    postVerifyPaypal as postVerifyPaypal,
 }

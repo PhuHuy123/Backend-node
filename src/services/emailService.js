@@ -142,8 +142,8 @@ let getBodyHTMLEmailUpdatePassword = (dataSend) =>{
             `
     return res
 }
-module.exports = {
-    sendSimpleEmail: sendSimpleEmail,
-    sendAppointment:sendAppointment,
-    updatePasswordEmail:updatePasswordEmail,
+export {
+    sendSimpleEmail as  sendSimpleEmail,
+    sendAppointment as sendAppointment,
+    updatePasswordEmail as updatePasswordEmail,
 }

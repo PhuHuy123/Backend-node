@@ -74,6 +74,6 @@ let getSearchApi = (name) => {
     })
 }
 
-module.exports = {
-    getSearchApi:getSearchApi,
+export {
+    getSearchApi as getSearchApi,
 }

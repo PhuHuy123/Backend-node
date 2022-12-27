@@ -1,4 +1,4 @@
-import specialtyService from '../services/specialtyService'
+import * as sspecialtyService from '../services/specialtyService'
 
 let createNewSpecialty = async(req, res)=>{
     try {
@@ -57,10 +57,10 @@ let editSpecialty = async(req, res)=> {
     let message = await specialtyService.editSpecialty(req.body);
     return res.status(200).json(message)
 }
-module.exports ={
-    createNewSpecialty:createNewSpecialty,
-    getAllSpecialty:getAllSpecialty,
-    getDetailSpecialtyById:getDetailSpecialtyById,
-    deleteSpecialtyById:deleteSpecialtyById,
-    editSpecialty:editSpecialty,
+export {
+    createNewSpecialty as createNewSpecialty,
+    getAllSpecialty as getAllSpecialty,
+    getDetailSpecialtyById as getDetailSpecialtyById,
+    deleteSpecialtyById as deleteSpecialtyById,
+    editSpecialty as editSpecialty,
 }

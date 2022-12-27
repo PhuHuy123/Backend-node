@@ -1,0 +1,34 @@
+const path = require('path')
+const nodeExternals = require('webpack-node-externals')
+
+module.exports = {
+  entry: './src/server.js',
+  target: 'node',
+  mode: 'development',
+  externals: [nodeExternals()],
+  externalsPresets: {
+    node: true,
+  },
+  output: {
+    path: path.resolve(__dirname, 'dist'),
+    filename: 'server.js',
+  },
+  resolve: {
+    extensions: ['.ts', '.js'],
+  },
+  module: {
+    rules: [
+      {
+        test: /\.(js)$/,
+        exclude: /node_modules/,
+        use: {
+          loader: 'babel-loader',
+          options: {
+            presets: ['@babel/preset-env'],
+            plugins: ['@babel/plugin-proposal-class-properties', '@babel/plugin-proposal-object-rest-spread'],
+          },
+        },
+      },
+    ],
+  },
+}

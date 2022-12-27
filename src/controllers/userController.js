@@ -1,5 +1,5 @@
 import db from '../models/index'
-import userService from '../services/userService'
+import * as userService from '../services/userService'
 
 let handleLogin= async(req, res)=> {
     let email = req.body.email;
@@ -123,17 +123,17 @@ let resetTokenPassword = async (req, res)=>{
     return res.status(200).json({userData})
     
 }
-module.exports ={
-    handleLogin:handleLogin,
-    handleUpdatePassword:handleUpdatePassword,
-    handleCheckEmail: handleCheckEmail,
-    handleGetAllUsers:handleGetAllUsers,
-    handleCreateNewUser: handleCreateNewUser,
-    handleEditUser: handleEditUser,
-    handleUpdateUser: handleUpdateUser,
-    handleDeleteNewUser: handleDeleteNewUser,
-    getAllCode: getAllCode,
-    resetTokenPassword:resetTokenPassword,
+export {
+    handleLogin as handleLogin,
+    handleUpdatePassword as handleUpdatePassword,
+    handleCheckEmail as  handleCheckEmail,
+    handleGetAllUsers as handleGetAllUsers,
+    handleCreateNewUser as  handleCreateNewUser,
+    handleEditUser as  handleEditUser,
+    handleUpdateUser as  handleUpdateUser,
+    handleDeleteNewUser as  handleDeleteNewUser,
+    getAllCode as  getAllCode,
+    resetTokenPassword as resetTokenPassword,
     
 }
 

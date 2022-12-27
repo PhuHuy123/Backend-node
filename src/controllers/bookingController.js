@@ -1,8 +1,8 @@
-import bookingService from '../services/bookingService'
+import * as bookingService from '../services/bookingService'
 
-let getCancelBook = async(req, res)=>{
+const getCancelBook = async(req, res)=>{
     try {
-        let info = await bookingService.getCancelBook(req.query.id);
+        const info = await bookingService.getCancelBook(req.query.id);
         return res.status(200).json(info)
     } catch (e) {
         console.log(e);
@@ -12,9 +12,9 @@ let getCancelBook = async(req, res)=>{
         })
     }
 }
-let getAllBooking = async(req, res)=>{
+const getAllBooking = async(req, res)=>{
     try {
-        let info = await bookingService.getAllBooking(req.query.id);
+        const info = await bookingService.getAllBooking(req.query.id);
         return res.status(200).json(info)
     } catch (e) {
         console.log(e);
@@ -24,9 +24,9 @@ let getAllBooking = async(req, res)=>{
         })
     }
 }
-let getBookingSingleId = async(req, res)=>{
+const getBookingSingleId = async(req, res)=>{
     try {
-        let info = await bookingService.getBookingSingleId(req.query.id);
+        const info = await bookingService.getBookingSingleId(req.query.id);
         return res.status(200).json(info)
     } catch (e) {
         console.log(e);
@@ -36,8 +36,8 @@ let getBookingSingleId = async(req, res)=>{
         })
     }
 } 
-module.exports ={
-    getCancelBook:getCancelBook,
-    getAllBooking:getAllBooking,
-    getBookingSingleId:getBookingSingleId
+export {
+    getCancelBook as getCancelBook,
+    getAllBooking as getAllBooking,
+    getBookingSingleId as getBookingSingleId
 }
