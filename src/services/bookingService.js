@@ -18,6 +18,9 @@ let getCancelBook = (id) => {
                     raw: false,
                 });
                 if(data){
+                    await db.Examination.destroy({
+                        where: {bookingId: data.id}
+                    });
                     data.statusId = 'S4'
                     await data.save();
                 }

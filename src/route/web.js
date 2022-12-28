@@ -86,6 +86,7 @@ let initWebRoutes = (app)=>{
     router.post('/api/create-new-examination',examinationController.createExamination);
 
     router.get('/api/get-all-examination-byId',examinationController.getAllExaminationById);
+    router.delete('/api/delete-examination-byId',examinationController.deleteExaminationById);
 
 
 

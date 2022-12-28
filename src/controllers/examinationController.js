@@ -24,7 +24,19 @@ let getAllExaminationById = async(req, res)=>{
         })
     }
 }
+let deleteExaminationById= async (req, res)=>{
+    if(!req.body.id){
+        return res.status(200).json({
+            errCode: 1, 
+            message: "Chua nhan duoc ID",
+            users:[]
+        })
+    }
+    let message = await examinationService.deleteExaminationById(req.body.id)
+    return res.status(200).json(message)
+}
 module.exports ={
     createExamination,
     getAllExaminationById,
+    deleteExaminationById,
 }

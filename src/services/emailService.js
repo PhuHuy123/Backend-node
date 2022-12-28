@@ -16,9 +16,9 @@ let sendSimpleEmail = async(dataSend)=>{
 
     // send mail with defined transport object
     let info = await transporter.sendMail({
-        from: '"Khóa Luận Tốt nghiệp 👻" <zombiipark@gmail.com>', // sender address
+        from: '"Khóa Luận Tốt nghiệp 🏥" <zombiipark@gmail.com>', // sender address
         to: dataSend.receiverEmail, // list of receivers
-        subject: "Thông tin đặt lịch khắm bệnh ✔", // Subject line
+        subject: "Thông tin đặt lịch khắm bệnh 🏥✔", // Subject line
         // text: "Hello world?", 
         html: getBodyHTMLEmail(dataSend), // html body
     });
@@ -74,9 +74,9 @@ let sendAppointment = async(dataSend)=>{
 
     // send mail with defined transport object
     let info = await transporter.sendMail({
-        from: '"Khóa Luận Tốt nghiệp 👻" <zombiipark@gmail.com>', // sender address
+        from: '"Khóa Luận Tốt nghiệp 🏥" <zombiipark@gmail.com>', // sender address
         to: dataSend.email, // list of receivers
-        subject: "Kết quả đặt lịch khắm bệnh ✔", // Subject line
+        subject: "Kết quả đặt lịch khắm bệnh 🏥✔", // Subject line
         // text: "Hello world?", 
         html: getBodyHTMLEmailRemery(dataSend), // html body
         attachments: [
@@ -123,7 +123,7 @@ let updatePasswordEmail = async(dataSend)=>{
 
     // send mail with defined transport object
     let info = await transporter.sendMail({
-        from: '"Book my doctor 👻" <zombiipark@gmail.com>', // sender address
+        from: '"Book my doctor 🏥" <zombiipark@gmail.com>', // sender address
         to: dataSend.receiverEmail, // list of receivers
         subject: "Reset Password ✔", // Subject line
         // text: "Hello world?", 

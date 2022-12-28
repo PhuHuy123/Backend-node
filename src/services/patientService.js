@@ -91,7 +91,8 @@ let postBookAppointment = (data) => {
               });
             }
             var CronJob = require('cron').CronJob;
-            const job = new CronJob('*/1 * * * *',async function() {
+            const job = new CronJob('*/3 * * * *',async function() {
+              console.log(book[0].id);
               let remote = await db.Booking.findOne({
                 where: {
                   id:  book[0].id,

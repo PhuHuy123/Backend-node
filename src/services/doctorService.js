@@ -569,7 +569,7 @@ let getListPatientForDoctor = (doctorId, date) => {
         dataInfo = await db.Examination.findAll({
           where: {
             // statusId: "S2",
-            doctorId: doctorId,
+            // doctorId: doctorId,
             date: date,
           },
           include: [

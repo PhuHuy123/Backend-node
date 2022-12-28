@@ -84,7 +84,32 @@ let getAllExaminationById = (id) => {
       }
   })
 }
+let deleteExaminationById = (id)=>{
+  return new Promise(async (resolve, reject) =>{
+        try {
+          let examination = await db.Examination.findOne({
+              where: {id: id}
+          });
+          if(!examination){ 
+              resolve({
+                  errCode: 2,
+                  message: 'Đơn khám khong ton tai'
+              });               
+          }
+          await db.Examination.destroy({
+              where: {id: id}
+          });
+          resolve({
+              errCode: 0,
+              message: 'OK Delete thành công'
+          });
+      } catch (e) {
+          reject(e);
+      }
+    })
+}
 module.exports = {
   createExamination,
   getAllExaminationById,
+  deleteExaminationById,
 };
