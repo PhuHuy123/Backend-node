@@ -29,11 +29,10 @@ let handleUserLogin= (email, password) => {
                     raw: false,
                     nest: true,
                 });
-                if(user) {
-                    user.image? user.image = Buffer.from(user.image, 'base64').toString('binary'):
+                if(user && user.image) {
+                    // user.image? user.image = Buffer.from(user.image, 'base64').toString('binary'):
                     user.image = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQNL_ZnOTpXSvhf1UaK7beHey2BX42U6solRA&usqp=CAU'
                 }     
-
                 if(user){
                     let checkPassword = await bcrypt.compareSync(password, user.password)
 
@@ -202,9 +201,9 @@ let getAllUsers = (userId) => {
                     raw: false,
                     nest: true,
                 });
-                if(user && user.image) {
-                    user.image = Buffer.from(user?.image, 'base64').toString('binary');
-                }
+                // if(user && user.image) {
+                //     user.image = Buffer.from(user?.image, 'base64').toString('binary');
+                // }
             }
             resolve(user);
         } catch (e) {
@@ -222,7 +221,7 @@ let hashUserPassword = (password)=>{
         }
     })
 }
-let getNewUsers = (data) => {
+let getNewUsers = (data, image) => {
     return new Promise(async(resolve, reject) =>{
         try {
             let check = await checkEmail(data.email)
@@ -245,7 +244,7 @@ let getNewUsers = (data) => {
                     gender: data.gender,
                     roleId: data.roleId,
                     positionID: data.positionID,
-                    image: data.image,
+                    image: image,
                     // token: ''
                 })
                 resolve({
@@ -286,7 +285,7 @@ let getUserInfoById = (userId)=>{
      })
 }
 
-let updateUser=(data)=> {
+let updateUser=(data, image)=> {
     return new Promise(async (resolve, reject) =>{
          try {
              if(!data.id || !data.roleId || !data.positionID){
@@ -308,8 +307,8 @@ let updateUser=(data)=> {
                     user.gender = data.gender,
                     user.roleId = data.roleId,
                     user.positionID = data.positionID;
-                    if(data.image){
-                        user.image = data.image
+                    if(image){
+                        user.image = image
                     }
                     await user.save();
                     resolve({
@@ -337,8 +336,8 @@ let updateUser=(data)=> {
                         user.gender = data.gender,
                         user.roleId = data.roleId,
                         user.positionID = data.positionID;
-                        if(data.image){
-                            user.image = data.image
+                        if(image){
+                            user.image = image
                         }
                         
                         await user.save();

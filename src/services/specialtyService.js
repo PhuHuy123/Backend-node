@@ -3,10 +3,10 @@ import bcrypt from 'bcryptjs';
 require('dotenv').config();
 import _ from 'lodash';
 
-let createNewSpecialty = (data) => {
+let createNewSpecialty = (data, image) => {
     return new Promise(async(resolve, reject) =>{
         try {
-            if(!data.name || !data.imageBase64 || !data.contentMarkdown || !data.contentHTML){
+            if(!data.name || !image || !data.contentMarkdown || !data.contentHTML){
                 resolve({
                     errCode: 1,
                     message: 'Missing parameters !'
@@ -16,7 +16,7 @@ let createNewSpecialty = (data) => {
                 await db.Specialty.create({
                     descriptionHTML: data.contentHTML,
                     descriptionMarkdown: data.contentMarkdown,
-                    image: data.imageBase64,
+                    image: image,
                     name : data.name,
                 })
                 resolve({
@@ -34,12 +34,12 @@ let getAllSpecialty = () => {
     return new Promise(async(resolve, reject) =>{
         try {
             let data = await db.Specialty.findAll();
-            if(data && data.length > 0) {
-                data.map(item =>{
-                    item.image = Buffer.from(item.image, 'base64').toString('binary');
-                    return item;
-                })
-            }
+            // if(data && data.length > 0) {
+            //     data.map(item =>{
+            //         item.image = Buffer.from(item.image, 'base64').toString('binary');
+            //         return item;
+            //     })
+            // }
             resolve({
                 errCode:0,
                 message:'OK!',
@@ -121,10 +121,10 @@ let deleteSpecialtyById = (specialtyId)=>{
         }
      })
 }
-let editSpecialty=(data)=> {
+let editSpecialty=(data, image)=> {
     return new Promise(async (resolve, reject) =>{
          try {
-             if(!data.id || !data.name || !data.contentMarkdown || !data.previewImgURL){
+             if(!data.id || !data.name || !data.contentMarkdown){
                  resolve({
                      errCode:2,
                      message: "Khong tim thay user"
@@ -138,7 +138,9 @@ let editSpecialty=(data)=> {
                 specialty.name = data.name,
                 specialty.descriptionMarkdown = data.contentMarkdown,
                 specialty.descriptionHTML = data.contentHTML
-                specialty.image = data.previewImgURL
+                if(image){
+                    specialty.image = image
+                }
                 
                 await specialty.save();
                 // let allUsers = await db.User.findAll();

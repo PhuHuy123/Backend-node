@@ -1,15 +1,21 @@
 {
   "development": {
-    "username": "root",
-    "password": null,
-    "database": "CSDLWeb",
-    "host": "127.0.0.1",
-    "dialect": "mysql",
+    "username": "postgres",
+    "password": "111111",
+    "database": "postgres",
+    "host": "localhost",
+    "dialect": "postgres",
     "logging": false,
     "query":{
       "raw":true
     },  
-    "timezone": "+07:00"
+    "timezone": "+07:00",
+    "dialectOptions": {
+      "ssl": {
+        "require": true,
+        "rejectUnauthorized": false
+      }
+    }
   },
   "test": {
     "username": "root",

@@ -3,20 +3,21 @@ import bcrypt from 'bcryptjs';
 require('dotenv').config();
 import _ from 'lodash';
 
-let createNewClinic = (data) => {
+let createNewClinic = (data, image) => {
     return new Promise(async(resolve, reject) =>{
         try {
-            if(!data.name || !data.address || !data.imageBase64 || !data.contentMarkdown || !data.contentHTML){
+            if(!data.name || !data.address || !image || !data.contentMarkdown || !data.contentHTML){
                 resolve({
                     errCode: 1,
                     message: 'Missing parameters !'
                 })
             }
             else{
+                console.log(image);
                 await db.Clinic.create({
                     descriptionHTML: data.contentHTML,
                     descriptionMarkdown: data.contentMarkdown,
-                    image: data.imageBase64,
+                    image: image,
                     name : data.name,
                     address: data.address
                 })
@@ -35,12 +36,12 @@ let getAllClinic = () => {
     return new Promise(async(resolve, reject) =>{
         try {
             let data = await db.Clinic.findAll();
-            if(data && data.length > 0) {
-                data.map(item =>{
-                    item.image = Buffer.from(item.image, 'base64').toString('binary');
-                    return item;
-                })
-            }
+            // if(data && data.length > 0) {
+            //     data.map(item =>{
+            //         item.image = Buffer.from(item.image, 'base64').toString('binary');
+            //         return item;
+            //     })
+            // }
             resolve({
                 errCode:0,
                 message:'OK!',
@@ -112,10 +113,10 @@ let deleteClinicById = (clinicId)=>{
         }
      })
 }
-let editClinic=(data)=> {
+let editClinic=(data, image)=> {
     return new Promise(async (resolve, reject) =>{
          try {
-             if(!data.id || !data.name || !data.address || !data.contentMarkdown || !data.previewImgURL){
+             if(!data.id || !data.name || !data.address || !data.contentMarkdown){
                  resolve({
                      errCode:2,
                      message: "Khong tim thay user"
@@ -130,7 +131,9 @@ let editClinic=(data)=> {
                 clinic.address = data.address,
                 clinic.descriptionMarkdown = data.contentMarkdown,
                 clinic.descriptionHTML = data.contentHTML
-                clinic.image = data.previewImgURL
+                if(image){
+                    clinic.image = image
+                }
                 
                 await clinic.save();
                 // let allUsers = await db.User.findAll();

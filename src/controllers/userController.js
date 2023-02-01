@@ -1,6 +1,14 @@
 import db from '../models/index'
 import userService from '../services/userService'
 
+let upload = (req, res, next) => {
+    console.log("ss", req.file);
+//   if (!req.file) {
+//     next(new Error('No file uploaded!'));
+//     return;
+//   }
+}
+
 let handleLogin= async(req, res)=> {
     let email = req.body.email;
     let password = req.body.password;
@@ -59,7 +67,7 @@ let handleGetAllUsers = async(req, res)=>{
 
 let handleCreateNewUser = async (req, res)=>{
     
-    let message = await userService.getNewUsers(req.body)
+    let message = await userService.getNewUsers(req.body, req.file?.path)
     return res.status(200).json(message)
 }
 
@@ -83,7 +91,7 @@ let handleUpdateUser = async(req, res)=> {
             message: "Chua nhan duoc ID",
         })
     }
-    let message = await userService.updateUser(req.body);
+    let message = await userService.updateUser(req.body, req.file?.path);
     return res.status(200).json(message)
 }
 
@@ -124,6 +132,7 @@ let resetTokenPassword = async (req, res)=>{
     
 }
 module.exports ={
+    upload,
     handleLogin:handleLogin,
     handleUpdatePassword:handleUpdatePassword,
     handleCheckEmail: handleCheckEmail,

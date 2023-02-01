@@ -10,6 +10,7 @@ import postsController from "../controllers/postsController";
 import searchController from "../controllers/searchController";
 import examinationController from "../controllers/examinationController";
 import reCapTChaController from "../controllers/reCapTChaController";
+import fileUploader from '../config/cloudinary.config';
 
 
 let router = express.Router();
@@ -23,15 +24,16 @@ let initWebRoutes = (app)=>{
     router.get('/edit-crud',homeController.getEditCRUD);
     router.post('/put-crud',homeController.putCRUD);
     router.get('/delete-crud',homeController.deleteCRUD);
-
+    
+    router.post('/upload',fileUploader.single('image'), userController.upload);
     router.post('/api/login',userController.handleLogin);
     router.post('/api/update-password',userController.handleUpdatePassword);
     router.post('/api/check-email',userController.handleCheckEmail);
 
     router.get('/api/get-all-users',userController.handleGetAllUsers);
-    router.post('/api/create-new-user',userController.handleCreateNewUser);
+    router.post('/api/create-new-user',fileUploader.single('image') ,userController.handleCreateNewUser);
     router.get('/api/edit-user',userController.handleEditUser);
-    router.put('/api/update-user',userController.handleUpdateUser);
+    router.put('/api/update-user',fileUploader.single('image') ,userController.handleUpdateUser);
     router.delete('/api/delete-user',userController.handleDeleteNewUser);
     router.get('/api/all-code',userController.getAllCode);
 
@@ -55,27 +57,27 @@ let initWebRoutes = (app)=>{
     router.post('/api/verify-book-appointment',patientController.postVerifyBookAppointment);
     router.post('/api/verify-paypal',patientController.postVerifyPaypal);
 
-    router.post('/api/create-new-specialty',specialtyController.createNewSpecialty);
+    router.post('/api/create-new-specialty',fileUploader.single('image') ,specialtyController.createNewSpecialty);
     router.get('/api/get-specialty',specialtyController.getAllSpecialty);
     router.get('/api/get-detail-specialty-by-id',specialtyController.getDetailSpecialtyById);
     router.delete('/api/delete-specialty',specialtyController.deleteSpecialtyById);
-    router.put('/api/update-specialty',specialtyController.editSpecialty);
+    router.put('/api/update-specialty',fileUploader.single('image') ,specialtyController.editSpecialty);
 
-    router.post('/api/create-new-clinic',clinicController.createNewClinic);
+    router.post('/api/create-new-clinic',fileUploader.single('image') ,clinicController.createNewClinic);
     router.get('/api/get-clinic',clinicController.getAllClinic);
     router.get('/api/get-detail-clinic-by-id',clinicController.getDetailClinicById);
     router.delete('/api/delete-clinic',clinicController.deleteClinicById);
-    router.put('/api/update-clinic',clinicController.editClinic);
+    router.put('/api/update-clinic',fileUploader.single('image') ,clinicController.editClinic);
 
     router.get('/api/get-booking',bookingController.getAllBooking);
     router.get('/api/booking-single-by-id',bookingController.getBookingSingleId);
     router.get('/api/cancel-book',bookingController.getCancelBook);
     
-    router.post('/api/create-new-posts',postsController.createNewPosts);
+    router.post('/api/create-new-posts',fileUploader.single('image') ,postsController.createNewPosts);
     router.get('/api/get-posts',postsController.getAllPosts);
     router.get('/api/get-detail-posts-by-id',postsController.getDetailPostsById);
     router.delete('/api/delete-post',postsController.deletePostById);
-    router.put('/api/update-post',postsController.editPost);
+    router.put('/api/update-post',fileUploader.single('image') ,postsController.editPost);
 
     router.get('/api/search',searchController.getSearchApi);
 

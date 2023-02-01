@@ -2,7 +2,7 @@ import clinicService from '../services/clinicService'
 
 let createNewClinic = async(req, res)=>{
     try {
-        let info = await clinicService.createNewClinic(req.body);
+        let info = await clinicService.createNewClinic(req.body, req.file?.path);
         return res.status(200).json(info)
     } catch (e) {
         console.log(e);
@@ -54,7 +54,7 @@ let editClinic = async(req, res)=> {
             message: "Chua nhan duoc thông tin",
         })
     }
-    let message = await clinicService.editClinic(req.body);
+    let message = await clinicService.editClinic(req.body, req.file?.path);
     return res.status(200).json(message)
 }
 module.exports ={

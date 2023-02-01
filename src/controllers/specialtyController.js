@@ -2,7 +2,7 @@ import specialtyService from '../services/specialtyService'
 
 let createNewSpecialty = async(req, res)=>{
     try {
-        let info = await specialtyService.createNewSpecialty(req.body);
+        let info = await specialtyService.createNewSpecialty(req.body, req.file?.path);
         return res.status(200).json(info)
     } catch (e) {
         console.log(e);
@@ -54,7 +54,7 @@ let editSpecialty = async(req, res)=> {
             message: "Chua nhan duoc thông tin",
         })
     }
-    let message = await specialtyService.editSpecialty(req.body);
+    let message = await specialtyService.editSpecialty(req.body, req.file?.path);
     return res.status(200).json(message)
 }
 module.exports ={
