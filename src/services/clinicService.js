@@ -13,7 +13,6 @@ let createNewClinic = (data, image) => {
                 })
             }
             else{
-                console.log(image);
                 await db.Clinic.create({
                     descriptionHTML: data.contentHTML,
                     descriptionMarkdown: data.contentMarkdown,

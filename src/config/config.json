@@ -1,9 +1,9 @@
 {
   "development": {
     "username": "postgres",
-    "password": "111111",
+    "password": "Huy=125293129",
     "database": "postgres",
-    "host": "localhost",
+    "host": "db.zfwnbqeetnmglujyykpy.supabase.co",
     "dialect": "postgres",
     "logging": false,
     "query":{

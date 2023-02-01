@@ -8,7 +8,26 @@ const env = process.env.NODE_ENV || "development";
 const config = require(__dirname + '/../config/config.json')[env];
 const db = {};
 let sequelize;
-// const customizeConfig={
+const customizeConfig={
+  development: {
+    username: process.env.DB_USERNAME,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_DATABASE_NAME,
+    host: process.env.DB_HOST,
+    dialect: "postgres",
+    logging: false,
+    query:{
+      raw:true
+    },  
+    timezone: "+07:00",
+    dialectOptions: {
+      ssl: {
+        require: true,
+        rejectUnauthorized: false
+      }
+    }
+  },
+}[env]
 //   host: process.env.DB_HOST,// dia chi server
 //   dialect: 'postgres',
 //   logging: false,
@@ -27,14 +46,14 @@ let sequelize;
 //   customizeConfig
 //   );
 
-if (config.use_env_variable) {
-  sequelize = new Sequelize(process.env[config.use_env_variable], config);
+if (customizeConfig.use_env_variable) {
+  sequelize = new Sequelize(process.env[customizeConfig.use_env_variable], customizeConfig);
 } else {
   sequelize = new Sequelize(
-    config.database,
-    config.username,
-    config.password,
-    config
+    customizeConfig.database,
+    customizeConfig.username,
+    customizeConfig.password,
+    customizeConfig
   );
 }
 

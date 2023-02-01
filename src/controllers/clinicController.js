@@ -1,8 +1,12 @@
 import clinicService from '../services/clinicService'
+const cloudinary = require('cloudinary').v2;
 
 let createNewClinic = async(req, res)=>{
     try {
         let info = await clinicService.createNewClinic(req.body, req.file?.path);
+        if(info.errCode !==0){
+            await cloudinary.uploader.destroy(req.file?.filename)
+        }
         return res.status(200).json(info)
     } catch (e) {
         console.log(e);
@@ -55,6 +59,9 @@ let editClinic = async(req, res)=> {
         })
     }
     let message = await clinicService.editClinic(req.body, req.file?.path);
+    if(message.errCode !==0){
+        await cloudinary.uploader.destroy(req.file?.filename)
+    }
     return res.status(200).json(message)
 }
 module.exports ={

@@ -3,6 +3,9 @@ import specialtyService from '../services/specialtyService'
 let createNewSpecialty = async(req, res)=>{
     try {
         let info = await specialtyService.createNewSpecialty(req.body, req.file?.path);
+        if(info.errCode !==0){
+            await cloudinary.uploader.destroy(req.file?.filename)
+        }
         return res.status(200).json(info)
     } catch (e) {
         console.log(e);
@@ -55,6 +58,9 @@ let editSpecialty = async(req, res)=> {
         })
     }
     let message = await specialtyService.editSpecialty(req.body, req.file?.path);
+    if(message.errCode !==0){
+        await cloudinary.uploader.destroy(req.file?.filename)
+    }
     return res.status(200).json(message)
 }
 module.exports ={

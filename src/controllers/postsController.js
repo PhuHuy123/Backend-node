@@ -3,9 +3,11 @@ import postsService from '../services/postsService'
 let createNewPosts = async(req, res)=>{
     try {
         let info = await postsService.createNewPosts(req.body, req.file?.path);
+        if(info.errCode !==0){
+            await cloudinary.uploader.destroy(req.file?.filename)
+        }
         return res.status(200).json(info)
     } catch (e) {
-        console.log(e);
         return res.status(200).json({
             errCode: -1,
             message: 'Error from server...'
@@ -55,6 +57,9 @@ let editPost = async(req, res)=> {
         })
     }
     let message = await postsService.editPost(req.body, req.file?.path);
+    if(message.errCode !==0){
+        await cloudinary.uploader.destroy(req.file?.filename)
+    }
     return res.status(200).json(message)
 }
 module.exports ={
